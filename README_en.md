@@ -1,70 +1,70 @@
 <div align="center"> 
 
 ![digital_resistance2](https://github.com/user-attachments/assets/f08ab737-d667-490c-a01e-712129e04262)  
-Инструкция по настройке личного VPN-сервера, ориентированного на российские реалии.  
+Guide to setting up a personal VPN server focused on Russian conditions.
 </div>
 
-[This guide is also available in English.](/README_en.md)
+[Эта инструкция доступна на русском языке.](/README.md)
 
-# Вступление 
-Инструкция предполагается к выполнению на VPS/VDS с Debian или Ubuntu при помощи ПК на Windows. Однако, на вспомогательной машине может так же использоваться любой дистрибутив Linux. 
+# Introduction
+These instructions are intended to be executed on a VPS/VDS with Debian or Ubuntu using a PC running Windows. However, any Linux distro can also be used on the auxiliary machine.
 
-Для работы на Windows используйте [Windows Terminal.](https://github.com/microsoft/terminal)  
-Дополнительно, для вашего удобства, можно установить [WinSCP](https://winscp.net/eng/docs/lang:ru) и [PuTTY](https://www.putty.org/) для дальнейшего управления сервером через графический интерфейс.
+To work on Windows, use [Windows Terminal.](https://github.com/microsoft/terminal)  
+Additionally, for your convenience, you can use [WinSCP](https://winscp.net/eng/docs) and [PuTTY](https://www.putty.org/) for further server management through a GUI.
 
-**Настоятельно рекомендуется** полностью ознакомиться с инструкцией прежде, чем будете делать изложенное.
+**It is strongly recommended** to fully read the guide before proceeding with described steps.
 
-# Первоначальная настройка сервера 
-## Авторизация
+# Initial setup 
+## Authorization
 
-Подключаемся к серверу через SSH. Для этого можно использовать команду ssh в Терминале или WinSCP.
+Connect to the server via SSH. You can use the ssh command in Terminal or WinSCP.
 
-**ssh (Терминал):** Запускаем Терминал и вводим комманду `ssh root@[IP-адрес-сервера]`, соглашаемся на сохранение хэша ключа и вводим пароль от root (обычно указывается на странице услуги вашего хостера).
+**ssh (Terminal):** Open Terminal and enter the command `ssh root@[server-IP-address]`, agree to save the key’s hash, and enter the root password (usually provided on your host's service page).
 
-**WinSCP:**  Запускаем программу, вводим:
- * Имя хоста: IP-адрес вашего сервера.
- * Порт: 22 (по умолчанию).
- * Имя пользователя: root (или другой пользователь, согласно описанию приобретённой услуги в ЛК хостера).
- * Пароль: пароль от сервера, обычно указывается на странице услуги вашего хостера.
- * Нажимаем **Войти.** Соглашаемся продолжить во всплывающем окне с хэшем хостового ключа. Справа появится файловая система сервера. 
- * Теперь, в верхнем тулбаре, выбираем кнопку **Открыть сессию в PuTTY.** Вводим пароль от сервера. 
+**WinSCP:** Launch the program and enter:
+ * Hostname: Your server's IP address.
+ * Port: 22 (default).
+ * Username: root (or another user, as specified in the description of the server in your hoster's dashboard).
+ * Password: server password (should be specified in the description of the server in your hoster's dashboard).
+ * Click **Login.** Agree to continue in the pop-up window with the host key hash. The server's file system will appear on the right.
+ * Now, in the top toolbar, select the **Open session in PuTTY** button. Enter the server password.
 
-Мы предлагаем два варианта настройки – ручная, поэтапная настройка всех параметров или автоматический скрипт.  
-Обратите внимание, что **скрипт выполняет все рекомендуемые настройки,** в том числе региональные, которые могут быть вам не нужны. Ознакомьтесь с содержимым разделов перед выполнением и модифицируйте скрипт под свои нужды.
-
-<details>
-
-<summary>Ручной метод</summary>
-
-## Настройка
-1. Выполните команду `apt update && apt upgrade`.
-2. Выполните команду `ufw status` – вывод должен быть inactive.
-3. Выполните команду `ufw default deny incoming && ufw default allow outgoing`.
-4. Придумайте или [сгенерируйте](https://www.random.org/) случайное число от 1 до 65535 – это будет ваш новый порт подключения по SSH.
-5. Выполните команду `ufw allow [число порта для SSH]`.
-6. Перейдите по пути /etc/ssh/sshd_config, раскомментируйте строку `#Port 22` (т.е. удалите #) и замените число 22 на выбранное вами число.
-7. Выполните команду `systemctl restart ssh && systemctl restart networking && ufw enable`. 
-После этого сессия в WinSCP отвалится, потому что изменились данные подключения. Сессия ssh/PuTTY останется живой. Теперь ваш порт подключения к серверу по SSH сменился на указанное вами число, соответственно, для повторных будущих подключений вписывайте новый порт (вместо стандартного 22). При подключении через ssh это производится добавлением флага `-p [порт]` к указанной выше команде.
-
-## Блокировка подсетей ГРЧЦ
-___
-Этот раздел опциональный, но крайне рекомендуется, если вы находитесь в России.  
-
-Таким образом, мы настраиваем отсечение активного зондирования при явном нацеливании пауков-скрайберов на машину/подсеть провайдера вашей VDS/VPS. Если предположить, что РКН развернет активное сканирование хостов, потенциально используемых в качестве VPN (секретно, собирая статистику активных хостов в подсети, которые имеют подозиртельно много сомнительных портов) — мы обезопасим возможное занесение себя "на карандаш". 
-___
+We offer two setup options – manual, step-by-step configuration of all parameters or an automatic script.  
+Please note that **the script performs all recommended settings,** including regional ones that you may not need. Review the content of the sections before execution and modify the script to suit your needs.
 
 <details>
-<summary>Ограничение ГРЧЦ</summary>
 
-Это [обновляемый список](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) всех подсетей [ГРЧЦ,](https://ru.wikipedia.org/wiki/Главный_радиочастотный_центр) которые мы будем блокировать.
-Если среди этого списка вам нужно найти что-то конкретное, либо же просто интересует подробная информация – обратитесь к файлу [blacklist_with_comments.txt.](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt)
+<summary>Manual method</summary>
+
+## Configuration
+1. Run the command `apt update && apt upgrade`.
+2. Run the command `ufw status` – the output should be inactive.
+3. Run the command `ufw default deny incoming && ufw default allow outgoing`.
+4. Come up with or [generate](https://www.random.org/) a random number from 1 to 65535 – this will be your new SSH connection port.
+5. Run the command `ufw allow [SSH port number]`.
+6. Navigate to the path /etc/ssh/sshd_config, uncomment the line `#Port 22` (i.e., remove the #) and replace the number 22 with your chosen number.
+7. Run the command `systemctl restart ssh && systemctl restart networking && ufw enable`. 
+After this, the session in WinSCP will be disconnected because the connection data has changed. The ssh/PuTTY session will remain active. Your SSH connection port has now changed to the number you specified, so for future repeat connections, use the new port (instead of the default 22). When connecting via ssh, add the flag `-p [port]` to the command mentioned above.
+
+## Blocking GRFC subnets
+___
+This section is optional but highly recommended if you are in Russia.  
+
+This way, we configure the blocking of active probing when web crawlers are explicitly targeting your VDS/VPS provider's machine/subnet. Should Roskomnadzor deploy active scanning of hosts potentially used as VPNs (secretly collecting statistics of active hosts in the subnet with suspiciously many questionable ports) — we protect ourselves from being flagged.
+___
+
+<details>
+<summary>Restricting GRFC</summary>
+
+This is an [updated list](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) of all subnets from the [The General Radio Frequency Center (GRFC)](https://istories.media/en/cases/2023/02/08/the-case-of-russian-censorship/?tztc=1) that we will block.
+If you need to find something specific in this list, or if you are simply interested in detailed information, refer to the file [blacklist_with_comments.txt](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt).
 
 ### before.rules (IPv4)
 
-Выполните команду:
+Run the command:
 ```sh
 cat >> /etc/ufw/before.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw-before-input -s 109.124.119.88/29 -j DROP
 -A ufw-before-input -s 109.124.66.128/30 -j DROP
 -A ufw-before-input -s 109.124.66.160/28 -j DROP
@@ -895,10 +895,10 @@ EOF
 
 ### before6.rules (IPv6)
 
-Выполните команду:
+Run the command:
 ```sh
 cat >> /etc/ufw/before6.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw6-before-input -s 2a0c:a9c7:156::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:157::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:158::/48 -j DROP
@@ -906,40 +906,40 @@ COMMIT
 EOF
 ```
 
-Для будущего обновления списков, любым удобным способом пройдите по пути /etc/ufw к файлам before.rules и before6.rules и добавьте новые подсети, вписав их в соответствующем уже прописанным подсетям виде.
-Важно, чтобы последней строкой в обоих файлах было слово `COMMIT`, иначе они не будут считываться фаерволом.
+For future updates of the lists, navigate to the /etc/ufw directory using any preferred method and open the files before.rules and before6.rules. Add the new subnets by entering them in the format consistent with the existing ones.  
+It is important that the last line in both files is the word `COMMIT`, otherwise, the firewall will not read them.
 
 </details>
 
-## Порты
+## Ports
 
-Придумайте или [сгенерируйте](https://www.random.org/) **6 новых случайных чисел от 1 до 65535** – они потребуются в качестве портов для настраиваемых протоколов и веб-панели 3x-ui.
+Come up with or [generate](https://www.random.org/) **6 new random numbers from 1 to 65535** – these will be needed as ports for the configurable protocols and the 3x-ui web panel.
 
-Итого, учитывая ранее добавленные порты, всего их должно быть 7 штук:
-* Для подключения через SSH (мы уже добавили его).
-* Для веб-панели 3x-ui.
-* Для протокола VLESS.
-* Для протокола Trojan.
-* Для протокола AmneziaWG.
-* Для протокола OpenVPN-over-Cloak.
-* Для MTProto.
+In total, considering the previously added ports, there should be 7 in total:
+* For connecting via SSH (which we have already added).
+* For the 3x-ui web panel.
+* For the VLESS protocol.
+* For the Trojan protocol.
+* For the AmneziaWG protocol.
+* For the OpenVPN-over-Cloak protocol.
+* For MTProto.
 
-Выполните `ufw allow [ваше число]` соответственно 6 раз.
-Например:
+Run `ufw allow [your number]` command accordingly 6 times.
+For example:
 ```
 ufw allow 41567
 ufw allow 13854
-ufw allow 29875 и т. п.
-```  
-После выполняем команду `ufw reload`.
+ufw allow 29875, etc.
+```
+Then, run the command `ufw reload`.
 
 </details>
 
 <details>
 
-<summary>Автоматический метод</summary>
+<summary>Automatic method</summary>
 
-1. Создаем и выполняем скрипт настройки системы. В консоли сервера выполняем `nano prepare.sh` и вставляем содержимое скрипта:
+1. Create and run a system setup script. In the server console, run `nano prepare.sh` and paste the script's content:
 
 ```sh
 #!/usr/bin bash
@@ -956,23 +956,23 @@ while getopts ":u:p:" opt; do
       port_num=($OPTARG)
       ;;
     \?)
-      echo "Неверная опция: -$OPTARG" >&2
+      echo "Incorrect option: -$OPTARG" >&2
       exit 1
       ;;
   esac
 done
-echo "Настройка файервола"
+echo "Setiing up firewall"
 ufw default deny incoming && ufw default allow outgoing
 ufw allow $port_num
-echo "Добавляем порты в разрешённые в файерволе:"
+echo "Add ports to the allowed list in the firewall:"
 for ports in "${ports[@]}"; do
   ufw allow $ports
 done
-echo "Устанавливаем порт для SSH"
+echo "Set port for SSH"
 sed -i "s/^#Port 22/Port $port_num/" /etc/ssh/sshd_config
-echo "Блокировка сканирования ГРЧЦ"
+echo "Restrict GRFC"
 cat >> /etc/ufw/before.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw-before-input -s 109.124.119.88/29 -j DROP
 -A ufw-before-input -s 109.124.66.128/30 -j DROP
 -A ufw-before-input -s 109.124.66.160/28 -j DROP
@@ -1800,155 +1800,155 @@ cat >> /etc/ufw/before.rules <<EOF
 COMMIT
 EOF
 cat >> /etc/ufw/before6.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw6-before-input -s 2a0c:a9c7:156::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:157::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:158::/48 -j DROP
 COMMIT
 EOF
-echo "Перезапускаем сервисы"
+echo "Reload services"
 systemctl restart ssh && systemctl restart networking && ufw enable
 ```
 
-Далее, переходим к выполнению скрипта.  
-Порты для файервола перечисляются через запятую без пробелов после опции `-u`, например: `-u 41567,13854,29875`, для порта SSH просто указать число после опции `-p` (например `-p 7541`).  
+Next, proceed to run the script.  
+Ports for the firewall are listed comma-separated without spaces after the `-u` option, for example: `-u 41567,13854,29875`, and for the SSH port, just specify the number after the `-p` option (e.g., `-p 7541`).  
 
-Исходя из этого,  
-2. **Команда запуска скрипта** будет следующая: `bash ./prepare.sh -u 41567,13854,29875,7839,9475,11789 -p 7541`. Все значения замените на собственные (хотя, конечно, ничего не мешает использовать и шаблонные).
+Based on this,  
+2. **The command to run the script** will be as follows: `bash ./prepare.sh -u 41567,13854,29875,7839,9475,11789 -p 7541`. Replace all values with your own (although, of course, you can use the template ones if you prefer).
 
 </details>
 
-## Подключение к серверу через SSH-ключ
+## Connecting to the server via SSH Key
 ___
-Этот раздел опциональный, но рекомендуется для удобства и обеспечения безопасности.
+This section is optional but recommended for convenience and security.
 ___
-1. В Терминале выполняем команду `ssh-keygen -t ed25519`, задаем имя файла и *(опционально)* пароль для ключа.  
-Будут созданы два файла: публичный ключ **(файл с расширением .pub)** и файл приватного ключа авторизации **(без расширения, только заданное вами название).** Они будут сохранены в корень папки пользователя.
-2. Авторизуемся на сервере любым удобным способом и переходим к консоли, затем выполняем команду `mkdir ~/.ssh && touch ~/.ssh/authorized_keys && chmod 644 -R ~/.ssh`.
-3. Переходим к редактированию на сервере – используем WinSCP или [nano.](https://help.ubuntu.ru/wiki/nano)  
-В файле `/etc/ssh/sshd_config:`   
-Раскоментируем и меняем значение `PasswordAuthentication` на `no`  
-Раскомментируем строчку `PubkeyAuthentication` и меняем значение на `yes`  
-Добавляем новую строчку `AuthenticationMethods publickey`  
-Раскомментируем строчку `AuthorizedKeysFile`, а из её значения убираем `.ssh/authorized_keys2`  
-В результате должно быть так: `AuthorizedKeysFile      .ssh/authorized_keys`. Сохраняем файл.
+1. Run the command `ssh-keygen -t ed25519` in Terminal, set the filename and *(optionally)* a passphrase for the key.  
+This will create two files: the public key **(file with a .pub extension)** and the private authorization key **(without extension, only the name you specified).** They will be saved in the user's home directory.
+2. Log in to the server using any convenient method, access the console, and run the command `mkdir ~/.ssh && touch ~/.ssh/authorized_keys && chmod 644 -R ~/.ssh`.
+3. Edit on the server using WinSCP or [nano.](https://help.ubuntu.com/community/Nano)  
+In the file `/etc/ssh/sshd_config:`   
+Uncomment and change the value of `PasswordAuthentication` to `no`  
+Uncomment the line `PubkeyAuthentication` and change the value to `yes`  
+Add a new line `AuthenticationMethods publickey`  
+Uncomment the line `AuthorizedKeysFile` and remove `.ssh/authorized_keys2` from its value  
+As a result, it should look like this: `AuthorizedKeysFile      .ssh/authorized_keys`. Save the file.
 
-Возвращаемся к ранее созданному файлу публичного ключа, открываем его текстовым редактором и копируем содержимое **БЕЗ указания пользователя@хостнейма.** То есть без `username@hostname` в конце строчки.  
-В результате должно быть нечто подобное: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3CGQ2UqRlaqdxwIdyAMkvFWDkvnEAqBRIPCqbfXvYG`.  
-Переходим к файлу `/root/.ssh/authorized_keys`, открываем текстовым редактором и вставляем в него скопированное содержимое. Сохраняем файл.
+Return to the previously created public key file, open it with a text editor, and copy the content **WITHOUT specifying the user@hostname.** That is, without `username@hostname` at the end of the line.  
+It should look something like this: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3CGQ2UqRlaqdxwIdyAMkvFWDkvnEAqBRIPCqbfXvYG`.  
+Go to the file `/root/.ssh/authorized_keys`, open it with a text editor, and paste the copied content. Save the file.
 
-4. Выполняем команду `systemctl reload ssh` для применения изменений.
-5. Подключаемся к серверу через Терминал: ssh root@IP-сервера -i *(путь до файла приватного ключа)* -p *(порт для SSH)*. Вводим заданный ранее пароль к ключу.
+4. Run the command `systemctl reload ssh` to apply changes.
+5. Connect to the server via Terminal: ssh root@server-IP -i *(path to the private key file)* -p *(SSH port)*. Enter the previously set passphrase for the key.
 
-Если вы используете WinSCP, давайте настроим авторизацию и для него:  
-1. Выбираем **Новое подключение.**
-2. Вводим всё то же, что в начале инструкции, кроме пароля от root.
-3. Переходим в меню "Ещё..." → SSH/Аутентификация → Файл закрытого ключа → [...] (выбор файла) → меняем фильтр расширения на Все файлы → выбираем файл приватного ключа. Соглашаемся на конвертацию в необходимый формат, вводим пароль, если задавали, и сохраняем файл в безопасном месте. Он будет автоматически выбран в этом поле. Нажимаем ОК.
-4. Возвращаемся и подключаемся к серверу кнопкой Войти. Для удобства сохраните пресет авторизации этой сессии через ПКМ по вкладке с сервером → Сохранить подключение. Для авторизации в консоли через PuTTY нужно будет вводить пароль от ключа.
+If you're using WinSCP, let’s set up authentication for it as well:  
+1. Choose **New Session.**
+2. Enter all the same information as at the beginning of the instructions, except for the root password.
+3. Go to the "Advanced..." → SSH/Authentication → Private key file → [...] (file selection) → change the extension filter to All Files → select the private key file. Agree to convert it to the required format, enter the passphrase if set, and save the file in a secure location. It will be automatically selected in this field. Click OK.
+4. Return and connect to the server using the Login button. For convenience, save the authorization preset of this session by right-clicking on the server tab → Save Session. For authentication in the console via PuTTY, you will need to enter the key's passphrase.
 
 # 3x-ui
-1. Выполните команду:  
+1. Run the command:  
 `bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)`
 
-Начнется загрузка и установка зависимостей. Далее, во время установки 3x-ui, установщик спросит, желаете ли вы установить пользовательский порт для веб-панели. На этом этапе соглашаемся (вводом `y`), вводим ранее созданный порт для веб-панели.
+The download and installation of dependencies will begin. During the installation of 3x-ui, the installer will ask if you want to set a custom port for the web panel. Agree (by entering `y`) and enter the previously created port for the web panel.
 
-2. По успешному окончании установки программы, в консоли вы получите базовую справку и данные для авторизации в веб-панели, **в том числе ссылку запущенной веб-панели.** Переходим по ней в браузере.
-3. Используя предоставленные данные, авторизуемся в админке веб-панели. Далее в инструкции, названия пунктов веб-панели будут соответствовать официальной английской локализации — мы рекомендуем использовать именно её, потому что перевод на русский некачественный, а местами и вовсе искажает суть настроек, тем самым создавая неудобства.
-4. Переходим в раздел **Panel Settings:**
+2. Upon successful completion of the installation, you will receive basic information and credentials for accessing the web panel in the console, **including a link to the running web panel.** Open this link in a browser.
+3. Use the provided credentials to log in to the web panel's admin interface. In the instructions, the names of the web panel items will correspond to the official English localization — we recommend using it because the Russian translation is poor and sometimes distorts the settings' purpose, leading to inconvenience.
+4. Go to the **Panel Settings** section:
 
 <ins>*General:*</ins>
-* Listen port – указываем ранее созданный порт для веб-панели.
-* URI Path (путь к веб-панели) рекомендуется сменить на пользовательский.  
-*Сохраняем изменения кнопкой Save.*
+* Listen port – specify the previously created port for the web panel.
+* URI Path (path to the web panel) is recommended to change to a custom one.  
+*Save changes with the Save button.*
 
-<ins>*Authentication*</ins> (опционально):
-* Меняем имя пользователя и пароль на пользовательские. Рекомендуется использовать длинные значения.
-* В подразделе Secret Token включаем Secure Login. Автоматически сгенерированный секретный токен можно изменить на пользовательский.  
-*Сохраняем изменения кнопкой Save.*
+<ins>*Authentication*</ins> (optional):
+* Change the username and password to custom values. It's recommended to use long values.
+* In the Secret Token subsection, enable Secure Login. The automatically generated secret token can be changed to a custom one.  
+*Save changes with the Save button.*
 
-<ins>*Telegram Bot*</ins> (опционально):  
-Создаём бота:
-* Открываем ваш клиент Telegram и обращаемся к [@BotFather.](https://t.me/BotFather) Создаём нового бота с рандомным названием и юзернеймом. В "поздравительном" сообщении об успешном создании бота находим токен доступа к боту, копируем его.  
-* Если у вас кастомный клиент/включено отображение ID в экспериментальных настройках: заходим в Настройки/свой профиль и копируем ID вашего аккаунта; если у вас официальный клиент, напишите любое сообщение в чат и ответьте на него же командой /id.  
+<ins>*Telegram Bot*</ins> (optional):  
+Create a bot:
+* Open your Telegram client and contact [@BotFather.](https://t.me/BotFather) Create a new bot with a random name and username. In the "congratulatory" message about the successful creation of the bot, find and copy the bot access token.  
+* If you have a custom client/ID display enabled in experimental settings: go to Settings/your profile and copy your account ID; if you have the official client, send any message in a chat and reply to it with the /id command.  
 
-Возвращаемся к веб-панели:
-* Telegram Token: вставляем токен доступа к созданному боту из [@BotFather.](https://t.me/BotFather)
-* Admin Chat ID: указываем ID вашего аккаунта.
-* Notification Time: рекомендуется сменить на `@weekly` (еженедельно) или `@monthly` (ежемесячно). По умолчанию бот ежедневно присылает статистику использования вашего VPN-сервиса.
-* Включаем Login Notification.  
-*Сохраняем изменения кнопкой Save и перезагружаем панель кнопкой Restart Panel.*
+Return to the web panel:
+* Telegram Token: paste the bot access token obtained from [@BotFather.](https://t.me/BotFather)
+* Admin Chat ID: enter your account ID.
+* Notification Time: it is recommended to change it to `@weekly` or `@monthly`. By default, the bot sends the statistics of your VPN service usage daily.
+* Enable Login Notification.  
+*Save changes with the Save button and restart the panel with the Restart Panel button.*
 
-5. Переходим в раздел **Xray Configs:**
+5. Go to the **Xray Configs** section:
 
 <ins>*General:*</ins>
 * Freedom Protocol Strategy: AsIs.
 * Overall Routing Strategy: AsIs.
 
 <ins>*Log:*</ins>
-Если вам не нужно логгирование, отключаем его, поскольку оно создает дополнительную нагрузку на сервер. Проставяем none во всех пунктах.
+If logging is not needed, disable it as it adds extra load to the server. Set none for all items.
 
-<ins>*Protection Shield:*</ins> отключаем все пункты.  
-*Сохраняем изменения кнопкой Save и перезагружаем Xray кнопкой Restart Xray.*
+<ins>*Protection Shield:*</ins> disable all items.  
+*Save changes with the Save button and restart Xray with the Restart Xray button.*
 
-6. Переходим в раздел **Inbounds:**
+6. Go to the **Inbounds** section:
 
-Нажимаем **+ Add Inbound.** Настроим протокол VLESS/TCP. Трогаем только указанные разделы без отступлений.
-* Remark: задаем название для протокола (напр. VLESS/TCP)
+Click **+ Add Inbound.** Let's configure the VLESS/TCP protocol. Only modify the specified sections as directed.
+* Remark: set a name for the protocol (e.g., VLESS/TCP)
 * Protocol: vless.
-* Listen IP: указываем IP-адрес вашего сервера (скопируйте его из адресной строки браузера во вкладке с веб-панелью).
-* Port: указываем ранее созданный порт для VLESS/TCP.
-* Разворачиваем раздел Client. В будущем через него будет производиться управление доступом к VPN через ваш сервер для пользователей. В строке Email для удобства укажите, для какого устройства создается первый профиль (например, для ПК).
+* Listen IP: enter your server's IP address (copy it from the address bar in the browser tab with the web panel).
+* Port: specify the previously created port for VLESS/TCP.
+* Expand the Client section. In the future, this will be used to manage access to the VPN on your server for users. For convenience, in the Email field, specify which device the first profile is created for (e.g., for PC).
 * Transmission: TCP (RAW).
 * Security: Reality.
 * uTLS: chrome.
-* Dest (Target): укажите сайт, доступный к посещению из РФ. Например `whatsapp.com:443`.
-* SNI, по аналогии с предыдущим пунктом, будет выглядеть так: `whatsapp.com,www.whatsapp.com`
-* Нажимаем кнопку **Get new cert.**
-* Разворачиваем раздел Sniffing и активируем тумблер Enabled. Ставим галочки на HTTP, TLS, QUIC и FAKEDNS.
+* Dest (Target): specify a site accessible from Russia. For example, `whatsapp.com:443`.
+* SNI, similarly to the previous item, will look like this: `whatsapp.com,www.whatsapp.com`
+* Click the **Get new cert** button.
+* Expand the Sniffing section and enable the toggle switch. Check HTTP, TLS, QUIC, and FAKEDNS.
 
-Нажимаем кнопку **Create.** Готово! Мы запустили протокол VLESS/TCP.  
-В списке Inbounds, кликаем по иконке плюсика в области только что созданного протокола. Мы развернули меню пользователей. Чтобы скопировать ссылку на профиль, нажмите на иконку QR-кода, а затем кликните по нему. Сохраненную в буфер обмена ссылку можно импортировать в любой поддерживаемый менеджер подписок, будь то NekoRay (NekoBox)/v2rayN(G)/Hiddify.  
-Чтобы создать новый профиль (например, для отдельного устройства или пользователя), в меню Inbound'a нажмите Add client и задайте ему имя в разделе Email.  
- 
-Добавим Inbound для протокола Trojan: он создается почти аналогично указанному выше примеру. Различия лишь в этих пунктах:
+Click the **Create** button. Done! We have launched the VLESS/TCP protocol.  
+In the Inbounds list, click the plus icon in the just-created protocol area. You have expanded the user menu. To copy the profile link, click the QR code icon, then click on it again. The link saved to the clipboard can be imported into any supported subscription manager, whether NekoRay (NekoBox)/v2rayN(G)/Hiddify.  
+To create a new profile (e.g., for a separate device or user), in the Inbound menu, click Add client and assign it a name in the Email section.  
 
-* Protocol: указываем trojan.
-* Port: указываем порт, ранее созданный для этого протокола.
-* В разделе Client, для клиента нужно дополнительно указать пароль. В дальнейшем он нигде не вводится отдельно и копируется вместе с ссылкой конфигурации.
+Add an Inbound for the Trojan protocol: it is created almost identically to the example above. The differences are only in these points:
 
-Проверяем, что VPN функционирует корректно.
+* Protocol: specify trojan.
+* Port: specify the port previously created for this protocol.
+* In the Client section, you need to specify a password for the client additionally. It is not entered separately and is copied with the configuration link.
+
+Check that the VPN is functioning correctly.
 
 <details>
 
-<summary>Дополнительно, можно завести роутинг через Cloudflare WARP отдельным Inbound.</summary>
+<summary>Additionally, you can set up routing through Cloudflare WARP with a separate Inbound.</summary>
 
-1. Создаем новый Inbound с протоколом VLESS/TCP по аналогии с примером выше, задав ему другое имя, например, WARP-over-VLESS. Для него нужно создать отдельный порт, заранее прописав на сервере команду `ufw allow [порт] && ufw reload`.  
-Не стоит пользоваться опцией клонирования, потому что в таком случае вы теряете возможность редактировать все настройки клона, что в теории может понадобиться в будущем. 
-2. Переходим в раздел Xray Configs → Outbounds → WARP → разворачиваем More information → нажимаем Enable.
-3. Нажимаем Save и перезагружаем Xray кнопкой Restart Xray.
-4. Переходим в раздел Routing Rules → Add Rule → в пункте Inbound Tags выбираем `inbound-[ip-адрес]:[порт]` с портом, соответствующим вашему новому профилю. В пункте Outbound Tags выбираем `warp`. Сохраняем кнопкой Save и перезагружаем Xray кнопкой Restart Xray.
-5. Добавляем конфигурацию WARP-over-VLESS в ваш менеджер подписок. Готово! 
+1. Create a new Inbound with the VLESS/TCP protocol similarly to the example above, giving it a different name, such as WARP-over-VLESS. You need to create a separate port for it, pre-defining it on the server with the command `ufw allow [port] && ufw reload`.  
+Avoid using the clone option, as this would prevent you from editing all settings of the clone, which might be necessary in the future.
+2. Go to the Xray Configs → Outbounds → WARP section, expand More information, and click Enable.
+3. Click Save and restart Xray using the Restart Xray button.
+4. Go to the Routing Rules section → Add Rule → in the Inbound Tags field, select `inbound-[ip-address]:[port]` with the port corresponding to your new profile. In the Outbound Tags field, select `warp`. Save with the Save button and restart Xray using the Restart Xray button.
+5. Add the WARP-over-VLESS configuration to your subscription manager. Done!
 
-Это может пригодиться, если вам не очень повезло с IP-адресом сервера, региональная принадлежность которого некорректно определяется различными сайтами, практикующими геоблок для пользователей из России. Либо когда IP-адрес попросту "грязный" (то есть ранее кем-то использовался в недобросовестных целях, вследствие чего сайты постоянно требуют капчу или ограничивают доступ). WARP использует IP-адреса серверов Cloudflare, ближайших по местоположению к вашему серверу. Это полностью бесплатно, а трафик безлимитный.
+This may be useful if you're unlucky with the server's IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblocking for users from Russia. Or if the IP address is simply "dirty" (meaning it was previously used for unscrupulous purposes, causing sites to constantly require CAPTCHAs or restrict access). WARP uses the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
 
 </details>
 
 # Amnezia
-1. Скачиваем клиент [AmneziaVPN](https://amnezia.org/en/downloads) на ПК (сайт недоступен из России).  
-Запускаем и выбираем пункт **Настроить свой сервер** → **У меня есть данные подключения** → указываем `IP-адрес сервера:порт для авторизации через SSH` *(например 134.43.57.54:43842)*, логин root и пароль от сервера. На экране появится прогресс-бар, ждём некоторое время.  
-> Если вы используете авторизацию через SSH-ключ, в поле ввода пароля вставьте содержимое файла приватного ключа (учитывая строки `-----BEGIN OPENSSH PRIVATE KEY-----` и `-----END OPENSSH PRIVATE KEY-----`).
-2. Откроется окно выбора предустановленных профилей. Листаем вниз и выбираем вариант **Выбрать протокол самостоятельно.**
-3. Выбираем AmneziaWG, указываем порт, который создавали для этого протокола. Ждём окончания установки. 
-4. После установки первого протокола мы попадаем на основную страницу клиента AmneziaVPN. Кликаем по иконке настроек → Серверы → выбираем наш сервер (Server 1). Здесь его можно переименовать. В разделе Протоколы находим OpenVPN over Cloak и рядом нажимаем на кнопку загрузки. Указываем порт, который ранее добавляли для этого протокола. Ждём окончания установки.  
+1. Download the [AmneziaVPN](https://amnezia.org/en/downloads) client on your PC (the site is inaccessible from Russia).  
+Launch it and select **Set up your own server** → **I have connection data** → enter the `Server IP address:port for SSH authorization` *(e.g., 134.43.57.54:43842)*, login as root, and enter the server password. A progress bar will appear on the screen; wait a while.  
+> If you're using SSH key authentication, paste the contents of the private key file into the password input field (including the lines `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).
+2. A window for selecting pre-installed profiles will open. Scroll down and select **Choose protocol manually.**
+3. Select AmneziaWG, and specify the port you created for this protocol. Wait for the installation to finish.
+4. After installing the first protocol, you will land on the main page of the AmneziaVPN client. Click the settings icon → Servers → select your server (Server 1). Here you can rename it. In the Protocols section, find OpenVPN over Cloak and click the download button next to it. Specify the port that you previously added for this protocol. Wait for the installation to complete.  
 
-Дополнительно можно сменить сайт, под который будет маскироваться трафик при использовании этого протокола. Переходим в раздел OpenVPN over Cloak → Cloak → вводим в поле "Замаскировать трафик под" желаемый домен (зарубежный, и, естественно, доступный из РФ).  
+Additionally, you can change the site that will mask the traffic when using this protocol. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (foreign and, of course, accessible from Russia).  
 
-5. Чтобы добавить ваш сервер с AmneziaVPN на телефон, снизу выбираем кнопку **Поделиться** и добавляем юзеров для каждого протокола отдельно. Протокол AmneziaWG можно добавить QR-кодом, если повезёт, то OpenVPN over Cloak тоже. Если нет – жмём в окне с постоянно меняющимся QR-кодом "Поделиться" и сохраняем конфиг файлом, далее добавляем его на телефон.  
-Управлять пользователями можно в разделе Поделиться → Пользователи.  
-Поделиться "полным доступом к серверу" (т.е. управление протоколами, пользователями и др. на ином устройстве) можно через дополнительное меню (троеточие) в том же разделе Поделиться.
+5. To add your server with AmneziaVPN to a phone, click the **Share** button at the bottom and add users for each protocol separately. You can add the AmneziaWG protocol using a QR code, and if you're lucky, OpenVPN over Cloak too. If not, in the window with the constantly changing QR code, click "Share," save the config file, and then add it to your phone.  
+You can manage users in the Share → Users section.  
+You can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
 
 # MTProto
-> Этот раздел будет дополнен в обозримом будущем.  
+> This section will be completed in the near future.  
 
-Мы рекомендуем использовать [mtg](https://github.com/9seconds/mtg) для поднятия MTProto.  
-Существует [обновляемый форк](https://github.com/GetPageSpeed/MTProxy) официального MTProto от команды Telegram, настройка которого [подробно раписывается по ссылке.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
+We recommend using [mtg](https://github.com/9seconds/mtg) to set up MTProto.  
+There is an [updated fork](https://github.com/GetPageSpeed/MTProxy) of the official MTProto by the Telegram team, whose setup is [described in detail through this link.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
