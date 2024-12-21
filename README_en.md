@@ -1,16 +1,16 @@
 <div align="center"> 
 
 ![digital_resistance2](https://github.com/user-attachments/assets/f08ab737-d667-490c-a01e-712129e04262)  
-Guide to setting up a personal VPN server focused on Russian conditions.
+Guide to setting up a personal VPN server, especially focused on Russian conditions.
 </div>
 
 [Эта инструкция доступна на русском языке.](/README.md)
 
 # Introduction
-These instructions are intended to be executed on a VPS/VDS with Debian or Ubuntu using a PC running Windows. However, any Linux distro can also be used on the auxiliary machine.
+These instructions are intended to be performed on a VPS/VDS with Debian or Ubuntu using a PC running Windows. However, any Linux distro can also be used on the auxiliary machine.
 
 To work on Windows, use [Windows Terminal.](https://github.com/microsoft/terminal)  
-Additionally, for your convenience, you can use [WinSCP](https://winscp.net/eng/docs) and [PuTTY](https://www.putty.org/) for further server management through a GUI.
+Additionally, you can use [WinSCP](https://winscp.net/eng/docs) and [PuTTY](https://www.putty.org/) for further server management through a GUI.
 
 **It is strongly recommended** to fully read the guide before proceeding with described steps.
 
@@ -19,17 +19,17 @@ Additionally, for your convenience, you can use [WinSCP](https://winscp.net/eng/
 
 Connect to the server via SSH. You can use the ssh command in Terminal or WinSCP.
 
-**ssh (Terminal):** Open Terminal and enter the command `ssh root@[server-IP-address]`, agree to save the key’s hash, and enter the root password (usually provided on your host's service page).
+**ssh (Terminal):** Open Terminal and enter the command `ssh user@[server-IP-address]`, agree to save the key hash, and enter the user's password. Username and password specified in the service info in your hoster's dashboard.
 
 **WinSCP:** Launch the program and enter:
- * Hostname: Your server's IP address.
+ * Hostname: your server's IP address.
  * Port: 22 (default).
- * Username: root (or another user, as specified in the description of the server in your hoster's dashboard).
- * Password: server password (should be specified in the description of the server in your hoster's dashboard).
- * Click **Login.** Agree to continue in the pop-up window with the host key hash. The server's file system will appear on the right.
+ * Username: root is the most common; or another user, as specified in the service info in your hoster's dashboard.
+ * Password: specified in the service info in your hoster's dashboard.
+ * Click **Login.** Agree to continue in the pop-up window with the host key hash. The server's file system will appear on the right side of window.
  * Now, in the top toolbar, select the **Open session in PuTTY** button. Enter the server password.
 
-We offer two setup options – manual, step-by-step configuration of all parameters or an automatic script.  
+We offer two setup options – manual, step-by-step configuration of all settings or an automatic script.  
 Please note that **the script performs all recommended settings,** including regional ones that you may not need. Review the content of the sections before execution and modify the script to suit your needs.
 
 <details>
@@ -44,20 +44,20 @@ Please note that **the script performs all recommended settings,** including reg
 5. Run the command `ufw allow [SSH port number]`.
 6. Navigate to the path /etc/ssh/sshd_config, uncomment the line `#Port 22` (i.e., remove the #) and replace the number 22 with your chosen number.
 7. Run the command `systemctl restart ssh && systemctl restart networking && ufw enable`. 
-After this, the session in WinSCP will be disconnected because the connection data has changed. The ssh/PuTTY session will remain active. Your SSH connection port has now changed to the number you specified, so for future repeat connections, use the new port (instead of the default 22). When connecting via ssh, add the flag `-p [port]` to the command mentioned above.
+After this, the session in WinSCP will be disconnected because the connection data has changed. The ssh/PuTTY session will remain active. Your SSH connection port has now changed to the number you specified, so for future connections use the new port (instead of the default 22). When connecting via ssh, use the flag `-p [port]` with the command mentioned above.
 
 ## Blocking GRFC subnets
 ___
 This section is optional but highly recommended if you are in Russia.  
 
-This way, we configure the blocking of active probing when web crawlers are explicitly targeting your VDS/VPS provider's machine/subnet. Should Roskomnadzor deploy active scanning of hosts potentially used as VPNs (secretly collecting statistics of active hosts in the subnet with suspiciously many questionable ports) — we protect ourselves from being flagged.
+This way, we configure the blocking of active probing when web crawlers are explicitly targeting your VDS/VPS hoster machine/subnet. If Roskomnadzor deploy active scanning of hosts potentially used as VPNs (secretly collecting statistics of active hosts in the subnet with suspiciously many questionable ports) — we protect ourselves from being flagged.
 ___
 
 <details>
 <summary>Restricting GRFC</summary>
 
-This is an [updated list](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) of all subnets from the [The General Radio Frequency Center (GRFC)](https://istories.media/en/cases/2023/02/08/the-case-of-russian-censorship/?tztc=1) that we will block.
-If you need to find something specific in this list, or if you are simply interested in detailed information, refer to the file [blacklist_with_comments.txt](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt).
+This is an [up-to-date list](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) of all subnets from the [The General Radio Frequency Center (GRFC)](https://istories.media/en/cases/2023/02/08/the-case-of-russian-censorship/?tztc=1) that we will block.
+If you need to find something specific in this list, or if you are interested in detailed info about subnets, refer to the file [blacklist_with_comments.txt](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt).
 
 ### before.rules (IPv4)
 
@@ -913,7 +913,7 @@ It is important that the last line in both files is the word `COMMIT`, otherwise
 
 ## Ports
 
-Come up with or [generate](https://www.random.org/) **6 new random numbers from 1 to 65535** – these will be needed as ports for the configurable protocols and the 3x-ui web panel.
+Come up with or [generate](https://www.random.org/) **6 new random numbers from 1 to 65535** – these will be needed as ports for the VPN/Proxy protocols and the 3x-ui web panel.
 
 In total, considering the previously added ports, there should be 7 in total:
 * For connecting via SSH (which we have already added).
@@ -931,7 +931,7 @@ ufw allow 41567
 ufw allow 13854
 ufw allow 29875, etc.
 ```
-Then, run the command `ufw reload`.
+Then, run the `ufw reload` command.
 
 </details>
 
@@ -939,7 +939,7 @@ Then, run the command `ufw reload`.
 
 <summary>Automatic method</summary>
 
-1. Create and run a system setup script. In the server console, run `nano prepare.sh` and paste the script's content:
+1. We will create and run a quick setup script. In the server console, run `nano prepare.sh` and paste the script content:
 
 ```sh
 #!/usr/bin bash
@@ -1806,26 +1806,26 @@ cat >> /etc/ufw/before6.rules <<EOF
 -A ufw6-before-input -s 2a0c:a9c7:158::/48 -j DROP
 COMMIT
 EOF
-echo "Reload services"
+echo "Reloading services"
 systemctl restart ssh && systemctl restart networking && ufw enable
 ```
 
 Next, proceed to run the script.  
 Ports for the firewall are listed comma-separated without spaces after the `-u` option, for example: `-u 41567,13854,29875`, and for the SSH port, just specify the number after the `-p` option (e.g., `-p 7541`).  
 
-Based on this,  
+On this basis,  
 2. **The command to run the script** will be as follows: `bash ./prepare.sh -u 41567,13854,29875,7839,9475,11789 -p 7541`. Replace all values with your own (although, of course, you can use the template ones if you prefer).
 
 </details>
 
 ## Connecting to the server via SSH Key
 ___
-This section is optional but recommended for convenience and security.
+This section is optional but recommended for convenience and better security.
 ___
 1. Run the command `ssh-keygen -t ed25519` in Terminal, set the filename and *(optionally)* a passphrase for the key.  
 This will create two files: the public key **(file with a .pub extension)** and the private authorization key **(without extension, only the name you specified).** They will be saved in the user's home directory.
-2. Log in to the server using any convenient method, access the console, and run the command `mkdir ~/.ssh && touch ~/.ssh/authorized_keys && chmod 644 -R ~/.ssh`.
-3. Edit on the server using WinSCP or [nano.](https://help.ubuntu.com/community/Nano)  
+2. Log in to the server using any available method and access the console, then run the command `mkdir ~/.ssh && touch ~/.ssh/authorized_keys && chmod 644 -R ~/.ssh`.
+3. Edit on the server using WinSCP or [nano:](https://help.ubuntu.com/community/Nano)  
 In the file `/etc/ssh/sshd_config:`   
 Uncomment and change the value of `PasswordAuthentication` to `no`  
 Uncomment the line `PubkeyAuthentication` and change the value to `yes`  
@@ -1833,18 +1833,18 @@ Add a new line `AuthenticationMethods publickey`
 Uncomment the line `AuthorizedKeysFile` and remove `.ssh/authorized_keys2` from its value  
 As a result, it should look like this: `AuthorizedKeysFile      .ssh/authorized_keys`. Save the file.
 
-Return to the previously created public key file, open it with a text editor, and copy the content **WITHOUT specifying the user@hostname.** That is, without `username@hostname` at the end of the line.  
-It should look something like this: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3CGQ2UqRlaqdxwIdyAMkvFWDkvnEAqBRIPCqbfXvYG`.  
-Go to the file `/root/.ssh/authorized_keys`, open it with a text editor, and paste the copied content. Save the file.
+Return to the previously created public key file, open it with a text editor, and copy the key **WITHOUT specifying the username@hostname.** (at the end of the line).  
+Copied text should look something like this: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3CGQ2UqRlaqdxwIdyAMkvFWDkvnEAqBRIPCqbfXvYG`.  
+Go to the file `/root/.ssh/authorized_keys`, open it with a text editor, and paste the copied key. Save the file.
 
 4. Run the command `systemctl reload ssh` to apply changes.
-5. Connect to the server via Terminal: ssh root@server-IP -i *(path to the private key file)* -p *(SSH port)*. Enter the previously set passphrase for the key.
+5. Connect to the server via Terminal: ssh root@server-IP -i *(path to the private key file)* -p *(SSH port)*. Enter the previously defined passphrase for the key.
 
 If you're using WinSCP, let’s set up authentication for it as well:  
 1. Choose **New Session.**
 2. Enter all the same information as at the beginning of the instructions, except for the root password.
-3. Go to the "Advanced..." → SSH/Authentication → Private key file → [...] (file selection) → change the extension filter to All Files → select the private key file. Agree to convert it to the required format, enter the passphrase if set, and save the file in a secure location. It will be automatically selected in this field. Click OK.
-4. Return and connect to the server using the Login button. For convenience, save the authorization preset of this session by right-clicking on the server tab → Save Session. For authentication in the console via PuTTY, you will need to enter the key's passphrase.
+3. Go to the "Advanced..." → SSH/Authentication → Private key file → [...] (file selection) → change the extension filter to All Files → select the private key file. Agree to convert it to the required PuTTY Private Key (.ppk) format, enter the passphrase (if it was set), and save the file in a secure place. File will be automatically selected in field. Click OK.
+4. Return and connect to the server using the Login button. For convenience, save the authorization preset of this session by right-clicking on the server tab → Save Session. For authentication in the console via PuTTY, you'll have to type passphrase for key every time.
 
 # 3x-ui
 1. Run the command:  
@@ -1853,7 +1853,7 @@ If you're using WinSCP, let’s set up authentication for it as well:
 The download and installation of dependencies will begin. During the installation of 3x-ui, the installer will ask if you want to set a custom port for the web panel. Agree (by entering `y`) and enter the previously created port for the web panel.
 
 2. Upon successful completion of the installation, you will receive basic information and credentials for accessing the web panel in the console, **including a link to the running web panel.** Open this link in a browser.
-3. Use the provided credentials to log in to the web panel's admin interface. In the instructions, the names of the web panel items will correspond to the official English localization — we recommend using it because the Russian translation is poor and sometimes distorts the settings' purpose, leading to inconvenience.
+3. Use the provided credentials to log in to the web panel's admin interface. In the instructions, the names of the web panel items will correspond to the official English localization — we recommend using it because the translations often poor and sometimes distorts the settings purpose, leading us to inconvenience.
 4. Go to the **Panel Settings** section:
 
 <ins>*General:*</ins>
@@ -1868,15 +1868,15 @@ The download and installation of dependencies will begin. During the installatio
 
 <ins>*Telegram Bot*</ins> (optional):  
 Create a bot:
-* Open your Telegram client and contact [@BotFather.](https://t.me/BotFather) Create a new bot with a random name and username. In the "congratulatory" message about the successful creation of the bot, find and copy the bot access token.  
-* If you have a custom client/ID display enabled in experimental settings: go to Settings/your profile and copy your account ID; if you have the official client, send any message in a chat and reply to it with the /id command.  
+* Open your Telegram client and contact [@BotFather.](https://t.me/BotFather) Create a new bot with a random name and username. In the congratulatory message about the successful creation of the bot, find and copy the bot access token.  
+* If you have a third-party client/ID showing enabled in experimental settings: go to Settings/your profile and copy your account ID; if you have the official client, send any message in a chat and reply to it with the /id command.  
 
 Return to the web panel:
 * Telegram Token: paste the bot access token obtained from [@BotFather.](https://t.me/BotFather)
 * Admin Chat ID: enter your account ID.
 * Notification Time: it is recommended to change it to `@weekly` or `@monthly`. By default, the bot sends the statistics of your VPN service usage daily.
 * Enable Login Notification.  
-*Save changes with the Save button and restart the panel with the Restart Panel button.*
+*Save changes by clicking Save and Restart Panel buttons.*
 
 5. Go to the **Xray Configs** section:
 
@@ -1888,7 +1888,7 @@ Return to the web panel:
 If logging is not needed, disable it as it adds extra load to the server. Set none for all items.
 
 <ins>*Protection Shield:*</ins> disable all items.  
-*Save changes with the Save button and restart Xray with the Restart Xray button.*
+*Save changes by clicking Save and Restart Xray buttons.*
 
 6. Go to the **Inbounds** section:
 
@@ -1901,13 +1901,13 @@ Click **+ Add Inbound.** Let's configure the VLESS/TCP protocol. Only modify the
 * Transmission: TCP (RAW).
 * Security: Reality.
 * uTLS: chrome.
-* Dest (Target): specify a site accessible from Russia. For example, `whatsapp.com:443`.
-* SNI, similarly to the previous item, will look like this: `whatsapp.com,www.whatsapp.com`
+* Dest (Target): specify a site accessible from Russia with its port. For example, `www.whatsapp.com:443`.
+* SNI, similarly to the previous item, should look like this: `www.whatsapp.com` (without specifying a port).
 * Click the **Get new cert** button.
 * Expand the Sniffing section and enable the toggle switch. Check HTTP, TLS, QUIC, and FAKEDNS.
 
 Click the **Create** button. Done! We have launched the VLESS/TCP protocol.  
-In the Inbounds list, click the plus icon in the just-created protocol area. You have expanded the user menu. To copy the profile link, click the QR code icon, then click on it again. The link saved to the clipboard can be imported into any supported subscription manager, whether NekoRay (NekoBox)/v2rayN(G)/Hiddify.  
+In the Inbounds list, click the plus icon in the just-created protocol area. You have expanded the user menu. To copy the profile link, click the QR code icon, then click on it again. The link saved to the clipboard can be imported into any supported subscription manager, whether NekoRay (NekoBox)/v2rayN(G)/Hiddify/etc.  
 To create a new profile (e.g., for a separate device or user), in the Inbound menu, click Add client and assign it a name in the Email section.  
 
 Add an Inbound for the Trojan protocol: it is created almost identically to the example above. The differences are only in these points:
@@ -1916,20 +1916,20 @@ Add an Inbound for the Trojan protocol: it is created almost identically to the 
 * Port: specify the port previously created for this protocol.
 * In the Client section, you need to specify a password for the client additionally. It is not entered separately and is copied with the configuration link.
 
-Check that the VPN is functioning correctly.
+Check that VPN is functioning correctly.
 
 <details>
 
 <summary>Additionally, you can set up routing through Cloudflare WARP with a separate Inbound.</summary>
 
-1. Create a new Inbound with the VLESS/TCP protocol similarly to the example above, giving it a different name, such as WARP-over-VLESS. You need to create a separate port for it, pre-defining it on the server with the command `ufw allow [port] && ufw reload`.  
+1. Create a new Inbound with the VLESS/TCP protocol similarly to the example above, giving it a different name (ex. WARP-over-VLESS). You need to create a separate port for it, pre-defining it on the server with the command `ufw allow [port] && ufw reload`.  
 Avoid using the clone option, as this would prevent you from editing all settings of the clone, which might be necessary in the future.
 2. Go to the Xray Configs → Outbounds → WARP section, expand More information, and click Enable.
-3. Click Save and restart Xray using the Restart Xray button.
-4. Go to the Routing Rules section → Add Rule → in the Inbound Tags field, select `inbound-[ip-address]:[port]` with the port corresponding to your new profile. In the Outbound Tags field, select `warp`. Save with the Save button and restart Xray using the Restart Xray button.
+3. Click Save and Restart Xray.
+4. Go to the Routing Rules section → Add Rule → in the Inbound Tags field, select `inbound-[ip-address]:[port]` with the port corresponding to your new profile. In the Outbound Tags field, select `warp`. Click Save and Restart Xray.
 5. Add the WARP-over-VLESS configuration to your subscription manager. Done!
 
-This may be useful if you're unlucky with the server's IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblocking for users from Russia. Or if the IP address is simply "dirty" (meaning it was previously used for unscrupulous purposes, causing sites to constantly require CAPTCHAs or restrict access). WARP uses the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
+This may be useful if you're unlucky with the server IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblock for users from your country. Or if the IP address is simply "dirty" (meaning it was previously used for some unfair purposes, causing sites to constantly require CAPTCHAs or fully restrict access). WARP uses the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
 
 </details>
 
@@ -1948,7 +1948,5 @@ You can manage users in the Share → Users section.
 You can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
 
 # MTProto
-> This section will be completed in the near future.  
-
 We recommend using [mtg](https://github.com/9seconds/mtg) to set up MTProto.  
-There is an [updated fork](https://github.com/GetPageSpeed/MTProxy) of the official MTProto by the Telegram team, whose setup is [described in detail through this link.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
+There is an [updated fork](https://github.com/GetPageSpeed/MTProxy) of the official MTProto by the Telegram developers. [Its configuration is described in detail here.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
