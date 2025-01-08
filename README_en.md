@@ -1,6 +1,7 @@
 <div align="center"> 
 
-![digital_resistance2](https://github.com/user-attachments/assets/f08ab737-d667-490c-a01e-712129e04262)  
+<img src="https://github.com/user-attachments/assets/5f6ade90-c240-4a4b-b46f-ed59c74e6dd1" width="50" height="62">
+
 Guide to setting up a personal VPN server, especially focused on Russian conditions.
 </div>
 
