@@ -1,6 +1,6 @@
 <div align="center"> 
 
-<img src="https://github.com/user-attachments/assets/5f6ade90-c240-4a4b-b46f-ed59c74e6dd1" width="50" height="62">
+<img src="https://github.com/user-attachments/assets/a00b09e5-88bc-4514-a14f-f77f91715605" width="50" height="62">
 
 Guide to setting up a personal VPN server, especially focused on Russian conditions.
 </div>
@@ -1828,11 +1828,11 @@ If you're using WinSCP, let’s set up authentication for it as well:
 3. Go to the "Advanced..." → SSH/Authentication → Private key file → [...] (file selection) → change the extension filter to All Files → select the private key file. Agree to convert it to the required PuTTY Private Key (.ppk) format, enter the passphrase (if it was set), and save the file in a secure place. File will be automatically selected in field. Click OK.
 4. Return and connect to the server using the Login button. For convenience, save the authorization preset of this session by right-clicking on the server tab → Save Session. For authentication in the console via PuTTY, you'll have to type passphrase for key every time.
 
-# 3x-ui
-1. Run the command:  
+# [3x-ui](https://github.com/MHSanaei/3x-ui)
+1. Let's install panel. Run the command:  
 `bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)`
 
-The download and installation of dependencies will begin. During the installation of 3x-ui, the installer will ask if you want to set a custom port for the web panel. Agree (by entering `y`) and enter the previously created port for the web panel.
+The download and installation of dependencies will begin. During the installation of 3x-ui, program will ask if you want to set a custom port for the web panel. Agree (by entering `y`) and enter the previously created port for the web panel.
 
 2. Upon successful completion of the installation, you will receive basic information and credentials for accessing the web panel in the console, **including a link to the running web panel.** Open this link in a browser.
 3. Use the provided credentials to log in to the web panel's admin interface. In the instructions, the names of the web panel items will correspond to the official English localization — we recommend using it because the translations often poor and sometimes distorts the settings purpose, leading us to inconvenience.
@@ -1925,20 +1925,20 @@ Go to **Xray Configs** → find WARP, open menu → Edit:
 
 </details>
 
-# Amnezia
+# [Amnezia](https://github.com/amnezia-vpn)
 1. Download the [AmneziaVPN](https://amnezia.org/en/downloads) client on your PC (the site is inaccessible in Russia).  
-Launch it and select **Set up your own server** → **I have connection data** → enter the `Server IP address:port for SSH authorization` *(e.g., 134.43.57.54:43842)*, login as root, and enter the server password. A progress bar will appear on the screen; wait a while.  
-> If you're using SSH key authentication, paste the contents of the private key file into the password input field (including the lines `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).
+Launch it and select **Set up your own server** → **I have connection data** → enter the `Server IP address:port for SSH authorization` *(e.g., 134.43.57.54:43842)*, login as root, and enter the server password. If you're using SSH key authentication, paste the contents of the private key file into the password input field (including the lines `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).  
+A progress bar will appear on the screen, wait a while. 
 2. A window for selecting pre-installed profiles will open. Scroll down and select **Choose protocol manually.**
-3. Select AmneziaWG, and specify the port you created for this protocol. Wait for the installation to finish.
+3. Select AmneziaWG, and specify the port you previously added for this protocol. Wait for the installation to finish.
 4. After installing the first protocol, you will land on the main page of the AmneziaVPN client. Click the settings icon → Servers → select your server (Server 1). Here you can rename it. In the Protocols section, find OpenVPN over Cloak and click the download button next to it. Specify the port that you previously added for this protocol. Wait for the installation to complete.  
 
-Additionally, you can change the site that will mask the traffic when using this protocol. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (located outside Russia but accessible in Russia).  
+You can also change the site that the traffic will mask as. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (located outside Russia but accessible in Russia).  
 
-5. To add your server with AmneziaVPN to a phone, click the **Share** button at the bottom and add users for each protocol separately. You can add the AmneziaWG protocol using a QR code, and if you're lucky, OpenVPN over Cloak too. If not, in the window with the constantly changing QR code, click "Share," save the config file, and then add it to your phone.  
+5. To share access to your VPN based on Amnezia to another device, click the **Share** button at the bottom and add users for each protocol separately. The AmneziaWG protocol can be imported via QR code. If you're lucky, OpenVPN over Cloak can be imported too. Otherwise, on the page with a constantly changing QR code (which cause scan to fail and there's no hurry to fix this bug) click "Share" and save the config file, then import it on another device.
 You can manage users in the Share → Users section.  
 You can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
 
 # MTProto
-We recommend using [mtg](https://github.com/9seconds/mtg) to set up personal MTProto.  
+I recommend using [mtg](https://github.com/9seconds/mtg) to set up personal MTProto.  
 Also there is an [updated fork](https://github.com/GetPageSpeed/MTProxy) based on the official MTProto by the Telegram developers. [Set up is described here.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
