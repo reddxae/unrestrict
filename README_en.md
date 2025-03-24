@@ -89,6 +89,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 109.73.4.224/27 -j DROP
 -A ufw-before-input -s 145.255.238.240/28 -j DROP
 -A ufw-before-input -s 149.62.55.240/30 -j DROP
+-A ufw-before-input -s 176.100.254.0/24 -j DROP
 -A ufw-before-input -s 176.109.0.0/21 -j DROP
 -A ufw-before-input -s 176.116.96.0/20 -j DROP
 -A ufw-before-input -s 178.16.156.148/30 -j DROP
@@ -135,7 +136,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 178.248.238.205/32 -j DROP
 -A ufw-before-input -s 178.248.238.255/32 -j DROP
 -A ufw-before-input -s 178.248.238.55/32 -j DROP
--A ufw-before-input -s 178.248.239.110/32 -j DROP
 -A ufw-before-input -s 178.248.239.215/32 -j DROP
 -A ufw-before-input -s 178.49.148.176/29 -j DROP
 -A ufw-before-input -s 185.149.160.0/24 -j DROP
@@ -268,6 +268,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 212.48.138.240/28 -j DROP
 -A ufw-before-input -s 212.48.141.160/27 -j DROP
 -A ufw-before-input -s 212.48.34.176/29 -j DROP
+-A ufw-before-input -s 212.48.34.184/29 -j DROP
 -A ufw-before-input -s 212.48.53.100/30 -j DROP
 -A ufw-before-input -s 212.48.53.144/30 -j DROP
 -A ufw-before-input -s 212.48.53.152/30 -j DROP
@@ -432,8 +433,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.195.92.16/28 -j DROP
 -A ufw-before-input -s 217.195.93.144/29 -j DROP
 -A ufw-before-input -s 217.195.94.200/29 -j DROP
--A ufw-before-input -s 217.198.6.128/26 -j DROP
--A ufw-before-input -s 217.198.6.48/29 -j DROP
 -A ufw-before-input -s 217.20.86.128/26 -j DROP
 -A ufw-before-input -s 217.20.86.232/29 -j DROP
 -A ufw-before-input -s 217.23.88.168/29 -j DROP
@@ -443,7 +442,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.65.219.160/29 -j DROP
 -A ufw-before-input -s 217.67.177.208/29 -j DROP
 -A ufw-before-input -s 31.177.95.0/24 -j DROP
--A ufw-before-input -s 31.217.218.96/29 -j DROP
 -A ufw-before-input -s 31.44.63.64/29 -j DROP
 -A ufw-before-input -s 37.28.161.48/30 -j DROP
 -A ufw-before-input -s 37.29.53.16/30 -j DROP
@@ -515,6 +513,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 62.63.101.80/29 -j DROP
 -A ufw-before-input -s 62.63.96.32/28 -j DROP
 -A ufw-before-input -s 62.63.98.24/29 -j DROP
+-A ufw-before-input -s 62.76.98.0/24 -j DROP
 -A ufw-before-input -s 77.243.9.80/28 -j DROP
 -A ufw-before-input -s 77.34.209.160/28 -j DROP
 -A ufw-before-input -s 77.35.76.80/28 -j DROP
@@ -653,13 +652,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 83.229.181.192/26 -j DROP
 -A ufw-before-input -s 83.229.211.192/29 -j DROP
 -A ufw-before-input -s 83.229.232.16/29 -j DROP
--A ufw-before-input -s 83.237.68.168/29 -j DROP
--A ufw-before-input -s 83.237.77.44/30 -j DROP
--A ufw-before-input -s 83.237.79.64/29 -j DROP
--A ufw-before-input -s 83.237.87.8/29 -j DROP
--A ufw-before-input -s 83.237.91.216/29 -j DROP
--A ufw-before-input -s 83.237.93.101/32 -j DROP
--A ufw-before-input -s 83.237.93.188/30 -j DROP
 -A ufw-before-input -s 83.242.145.224/27 -j DROP
 -A ufw-before-input -s 83.69.207.248/29 -j DROP
 -A ufw-before-input -s 84.204.143.44/30 -j DROP
@@ -759,7 +751,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 89.109.7.176/29 -j DROP
 -A ufw-before-input -s 89.111.176.0/22 -j DROP
 -A ufw-before-input -s 89.175.10.160/30 -j DROP
--A ufw-before-input -s 89.175.161.224/30 -j DROP
 -A ufw-before-input -s 89.175.165.208/28 -j DROP
 -A ufw-before-input -s 89.175.170.144/28 -j DROP
 -A ufw-before-input -s 89.175.174.136/29 -j DROP
@@ -914,18 +905,17 @@ It is important that the last line in both files is the word `COMMIT`, otherwise
 
 ## Ports
 
-Come up with or [generate](https://www.random.org/) **6 new random numbers from 1 to 65535** – these will be needed as ports for the VPN/Proxy protocols and the 3x-ui web panel.
+Come up with or [generate](https://www.random.org/) **5 new random numbers from 1 to 65535** – these will be needed as ports for the VPN/Proxy protocols and the 3x-ui web panel.
 
-In total, considering the previously added ports, there should be 7 in total:
+In total, considering the previously added ports, there should be 6 in total:
 * For connecting via SSH (which we have already added).
 * For the 3x-ui web panel.
 * For the VLESS protocol.
-* For the Trojan protocol.
 * For the AmneziaWG protocol.
 * For the OpenVPN-over-Cloak protocol.
 * For MTProto.
 
-Run `ufw allow [your number]` command accordingly 6 times.
+Run `ufw allow [your number]` command accordingly 5 times.
 For example:
 ```
 ufw allow 41567
@@ -997,6 +987,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 109.73.4.224/27 -j DROP
 -A ufw-before-input -s 145.255.238.240/28 -j DROP
 -A ufw-before-input -s 149.62.55.240/30 -j DROP
+-A ufw-before-input -s 176.100.254.0/24 -j DROP
 -A ufw-before-input -s 176.109.0.0/21 -j DROP
 -A ufw-before-input -s 176.116.96.0/20 -j DROP
 -A ufw-before-input -s 178.16.156.148/30 -j DROP
@@ -1043,7 +1034,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 178.248.238.205/32 -j DROP
 -A ufw-before-input -s 178.248.238.255/32 -j DROP
 -A ufw-before-input -s 178.248.238.55/32 -j DROP
--A ufw-before-input -s 178.248.239.110/32 -j DROP
 -A ufw-before-input -s 178.248.239.215/32 -j DROP
 -A ufw-before-input -s 178.49.148.176/29 -j DROP
 -A ufw-before-input -s 185.149.160.0/24 -j DROP
@@ -1176,6 +1166,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 212.48.138.240/28 -j DROP
 -A ufw-before-input -s 212.48.141.160/27 -j DROP
 -A ufw-before-input -s 212.48.34.176/29 -j DROP
+-A ufw-before-input -s 212.48.34.184/29 -j DROP
 -A ufw-before-input -s 212.48.53.100/30 -j DROP
 -A ufw-before-input -s 212.48.53.144/30 -j DROP
 -A ufw-before-input -s 212.48.53.152/30 -j DROP
@@ -1340,8 +1331,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.195.92.16/28 -j DROP
 -A ufw-before-input -s 217.195.93.144/29 -j DROP
 -A ufw-before-input -s 217.195.94.200/29 -j DROP
--A ufw-before-input -s 217.198.6.128/26 -j DROP
--A ufw-before-input -s 217.198.6.48/29 -j DROP
 -A ufw-before-input -s 217.20.86.128/26 -j DROP
 -A ufw-before-input -s 217.20.86.232/29 -j DROP
 -A ufw-before-input -s 217.23.88.168/29 -j DROP
@@ -1351,7 +1340,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.65.219.160/29 -j DROP
 -A ufw-before-input -s 217.67.177.208/29 -j DROP
 -A ufw-before-input -s 31.177.95.0/24 -j DROP
--A ufw-before-input -s 31.217.218.96/29 -j DROP
 -A ufw-before-input -s 31.44.63.64/29 -j DROP
 -A ufw-before-input -s 37.28.161.48/30 -j DROP
 -A ufw-before-input -s 37.29.53.16/30 -j DROP
@@ -1423,6 +1411,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 62.63.101.80/29 -j DROP
 -A ufw-before-input -s 62.63.96.32/28 -j DROP
 -A ufw-before-input -s 62.63.98.24/29 -j DROP
+-A ufw-before-input -s 62.76.98.0/24 -j DROP
 -A ufw-before-input -s 77.243.9.80/28 -j DROP
 -A ufw-before-input -s 77.34.209.160/28 -j DROP
 -A ufw-before-input -s 77.35.76.80/28 -j DROP
@@ -1561,13 +1550,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 83.229.181.192/26 -j DROP
 -A ufw-before-input -s 83.229.211.192/29 -j DROP
 -A ufw-before-input -s 83.229.232.16/29 -j DROP
--A ufw-before-input -s 83.237.68.168/29 -j DROP
--A ufw-before-input -s 83.237.77.44/30 -j DROP
--A ufw-before-input -s 83.237.79.64/29 -j DROP
--A ufw-before-input -s 83.237.87.8/29 -j DROP
--A ufw-before-input -s 83.237.91.216/29 -j DROP
--A ufw-before-input -s 83.237.93.101/32 -j DROP
--A ufw-before-input -s 83.237.93.188/30 -j DROP
 -A ufw-before-input -s 83.242.145.224/27 -j DROP
 -A ufw-before-input -s 83.69.207.248/29 -j DROP
 -A ufw-before-input -s 84.204.143.44/30 -j DROP
@@ -1667,7 +1649,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 89.109.7.176/29 -j DROP
 -A ufw-before-input -s 89.111.176.0/22 -j DROP
 -A ufw-before-input -s 89.175.10.160/30 -j DROP
--A ufw-before-input -s 89.175.161.224/30 -j DROP
 -A ufw-before-input -s 89.175.165.208/28 -j DROP
 -A ufw-before-input -s 89.175.170.144/28 -j DROP
 -A ufw-before-input -s 89.175.174.136/29 -j DROP
@@ -1815,7 +1796,7 @@ Next, proceed to run the script.
 Ports for the firewall are listed comma-separated without spaces after the `-u` option, for example: `-u 41567,13854,29875`, and for the SSH port, just specify the number after the `-p` option (e.g., `-p 7541`).  
 
 On this basis,  
-2. **The command to run the script** will be as follows: `bash ./prepare.sh -u 41567,13854,29875,7839,9475,11789 -p 7541`. Replace all values with your own (although, of course, you can use the template ones if you prefer).
+2. **The command to run the script** will be as follows: `bash ./prepare.sh -u 41567,13854,29875,7839,9475 -p 7541`. Replace all values with your own (although, of course, you can use the template ones if you prefer).
 
 </details>
 
@@ -1875,7 +1856,7 @@ Create a bot:
 Return to the web panel:
 * Telegram Token: paste the bot access token obtained from [@BotFather.](https://t.me/BotFather)
 * Admin Chat ID: enter your account ID.
-* Notification Time: it is recommended to change it to `@weekly` or `@monthly`. By default, the bot sends the statistics of your VPN service usage daily.
+* Notification Time: by default, bot sends daily statistics of your VPN service usage. The time is set in cron<sup>[`ℹ️`](https://en.wikipedia.org/wiki/Cron)</sup> scheduler format [(crontab).](https://crontab.guru/) It's recommended to change the default setting to `@weekly` (weekly) or `@monthly` (monthly).
 * Enable Login Notification.  
 *Save changes by clicking Save and Restart Panel buttons.*
 
@@ -1884,6 +1865,8 @@ Return to the web panel:
 <ins>*General:*</ins>
 * Freedom Protocol Strategy: AsIs.
 * Overall Routing Strategy: AsIs.
+
+Now expand <ins>*Basic Routing*</ins> subsection, click in a Block IPs field, and select `Private IP` from the dropdown menu. This way, we prevent pinging for all local addresses within the server's network. This comes in handy if you decide to share access to your VPN with someone else. In freshly installed versions of 3x-ui this blocking is set by default, in this case you don't need to change anything manually.
 
 <ins>*Log:*</ins>
 If logging is not needed, disable it as it adds extra load to the server. Set none for all items.
@@ -1902,7 +1885,7 @@ Click **+ Add Inbound.** Let's configure the VLESS/TCP protocol. Only modify the
 * Transmission: TCP (RAW).
 * Security: Reality.
 * uTLS: chrome.
-* Dest (Target): specify a site accessible from Russia with its port. For example, `www.whatsapp.com:443`.
+* Dest (Target): specify a site accessible in Russia with its port. For example, `www.whatsapp.com:443`.
 * SNI, similarly to the previous item, should look like this: `www.whatsapp.com` (without specifying a port).
 * Click the **Get new cert** button.
 * Expand the Sniffing section and enable the toggle switch. Check HTTP, TLS, QUIC, and FAKEDNS.
@@ -1932,22 +1915,30 @@ Avoid using the clone option, as this would prevent you from editing all setting
 
 This may be useful if you're unlucky with the server IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblock for users from your country. Or if the IP address is simply "dirty" (meaning it was previously used for some unfair purposes, causing sites to constantly require CAPTCHAs or fully restrict access). WARP uses the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
 
+If you are experiencing problems connecting via WARP (e.g. not all pages even load or load very slowly, can't use IPv6, or other troubles), try set desired profile to the configuration provided below.  
+Go to **Xray Configs** → find WARP, open menu → Edit:
+ 
+ * Domain Strategy: ForceIP.
+ * MTU: 1280.
+ * Workers: 2.
+ * Enable No Kernel Tun.
+
 </details>
 
 # Amnezia
-1. Download the [AmneziaVPN](https://amnezia.org/en/downloads) client on your PC (the site is inaccessible from Russia).  
+1. Download the [AmneziaVPN](https://amnezia.org/en/downloads) client on your PC (the site is inaccessible in Russia).  
 Launch it and select **Set up your own server** → **I have connection data** → enter the `Server IP address:port for SSH authorization` *(e.g., 134.43.57.54:43842)*, login as root, and enter the server password. A progress bar will appear on the screen; wait a while.  
 > If you're using SSH key authentication, paste the contents of the private key file into the password input field (including the lines `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).
 2. A window for selecting pre-installed profiles will open. Scroll down and select **Choose protocol manually.**
 3. Select AmneziaWG, and specify the port you created for this protocol. Wait for the installation to finish.
 4. After installing the first protocol, you will land on the main page of the AmneziaVPN client. Click the settings icon → Servers → select your server (Server 1). Here you can rename it. In the Protocols section, find OpenVPN over Cloak and click the download button next to it. Specify the port that you previously added for this protocol. Wait for the installation to complete.  
 
-Additionally, you can change the site that will mask the traffic when using this protocol. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (foreign and, of course, accessible from Russia).  
+Additionally, you can change the site that will mask the traffic when using this protocol. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (located outside Russia but accessible in Russia).  
 
 5. To add your server with AmneziaVPN to a phone, click the **Share** button at the bottom and add users for each protocol separately. You can add the AmneziaWG protocol using a QR code, and if you're lucky, OpenVPN over Cloak too. If not, in the window with the constantly changing QR code, click "Share," save the config file, and then add it to your phone.  
 You can manage users in the Share → Users section.  
 You can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
 
 # MTProto
-We recommend using [mtg](https://github.com/9seconds/mtg) to set up MTProto.  
-There is an [updated fork](https://github.com/GetPageSpeed/MTProxy) of the official MTProto by the Telegram developers. [Its configuration is described in detail here.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
+We recommend using [mtg](https://github.com/9seconds/mtg) to set up personal MTProto.  
+Also there is an [updated fork](https://github.com/GetPageSpeed/MTProxy) based on the official MTProto by the Telegram developers. [Set up is described here.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)

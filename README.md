@@ -89,6 +89,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 109.73.4.224/27 -j DROP
 -A ufw-before-input -s 145.255.238.240/28 -j DROP
 -A ufw-before-input -s 149.62.55.240/30 -j DROP
+-A ufw-before-input -s 176.100.254.0/24 -j DROP
 -A ufw-before-input -s 176.109.0.0/21 -j DROP
 -A ufw-before-input -s 176.116.96.0/20 -j DROP
 -A ufw-before-input -s 178.16.156.148/30 -j DROP
@@ -135,7 +136,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 178.248.238.205/32 -j DROP
 -A ufw-before-input -s 178.248.238.255/32 -j DROP
 -A ufw-before-input -s 178.248.238.55/32 -j DROP
--A ufw-before-input -s 178.248.239.110/32 -j DROP
 -A ufw-before-input -s 178.248.239.215/32 -j DROP
 -A ufw-before-input -s 178.49.148.176/29 -j DROP
 -A ufw-before-input -s 185.149.160.0/24 -j DROP
@@ -268,6 +268,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 212.48.138.240/28 -j DROP
 -A ufw-before-input -s 212.48.141.160/27 -j DROP
 -A ufw-before-input -s 212.48.34.176/29 -j DROP
+-A ufw-before-input -s 212.48.34.184/29 -j DROP
 -A ufw-before-input -s 212.48.53.100/30 -j DROP
 -A ufw-before-input -s 212.48.53.144/30 -j DROP
 -A ufw-before-input -s 212.48.53.152/30 -j DROP
@@ -432,8 +433,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.195.92.16/28 -j DROP
 -A ufw-before-input -s 217.195.93.144/29 -j DROP
 -A ufw-before-input -s 217.195.94.200/29 -j DROP
--A ufw-before-input -s 217.198.6.128/26 -j DROP
--A ufw-before-input -s 217.198.6.48/29 -j DROP
 -A ufw-before-input -s 217.20.86.128/26 -j DROP
 -A ufw-before-input -s 217.20.86.232/29 -j DROP
 -A ufw-before-input -s 217.23.88.168/29 -j DROP
@@ -443,7 +442,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.65.219.160/29 -j DROP
 -A ufw-before-input -s 217.67.177.208/29 -j DROP
 -A ufw-before-input -s 31.177.95.0/24 -j DROP
--A ufw-before-input -s 31.217.218.96/29 -j DROP
 -A ufw-before-input -s 31.44.63.64/29 -j DROP
 -A ufw-before-input -s 37.28.161.48/30 -j DROP
 -A ufw-before-input -s 37.29.53.16/30 -j DROP
@@ -515,6 +513,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 62.63.101.80/29 -j DROP
 -A ufw-before-input -s 62.63.96.32/28 -j DROP
 -A ufw-before-input -s 62.63.98.24/29 -j DROP
+-A ufw-before-input -s 62.76.98.0/24 -j DROP
 -A ufw-before-input -s 77.243.9.80/28 -j DROP
 -A ufw-before-input -s 77.34.209.160/28 -j DROP
 -A ufw-before-input -s 77.35.76.80/28 -j DROP
@@ -653,13 +652,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 83.229.181.192/26 -j DROP
 -A ufw-before-input -s 83.229.211.192/29 -j DROP
 -A ufw-before-input -s 83.229.232.16/29 -j DROP
--A ufw-before-input -s 83.237.68.168/29 -j DROP
--A ufw-before-input -s 83.237.77.44/30 -j DROP
--A ufw-before-input -s 83.237.79.64/29 -j DROP
--A ufw-before-input -s 83.237.87.8/29 -j DROP
--A ufw-before-input -s 83.237.91.216/29 -j DROP
--A ufw-before-input -s 83.237.93.101/32 -j DROP
--A ufw-before-input -s 83.237.93.188/30 -j DROP
 -A ufw-before-input -s 83.242.145.224/27 -j DROP
 -A ufw-before-input -s 83.69.207.248/29 -j DROP
 -A ufw-before-input -s 84.204.143.44/30 -j DROP
@@ -759,7 +751,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 89.109.7.176/29 -j DROP
 -A ufw-before-input -s 89.111.176.0/22 -j DROP
 -A ufw-before-input -s 89.175.10.160/30 -j DROP
--A ufw-before-input -s 89.175.161.224/30 -j DROP
 -A ufw-before-input -s 89.175.165.208/28 -j DROP
 -A ufw-before-input -s 89.175.170.144/28 -j DROP
 -A ufw-before-input -s 89.175.174.136/29 -j DROP
@@ -914,18 +905,17 @@ EOF
 
 ## Порты
 
-Придумайте или [сгенерируйте](https://www.random.org/) **6 новых случайных чисел от 1 до 65535** – они потребуются в качестве портов для настраиваемых протоколов и веб-панели 3x-ui.
+Придумайте или [сгенерируйте](https://www.random.org/) **5 новых случайных чисел от 1 до 65535** – они потребуются в качестве портов для настраиваемых протоколов и веб-панели 3x-ui.
 
-Итого, учитывая ранее добавленные порты, всего их должно быть 7 штук:
+Итого, учитывая ранее добавленные порты, всего их должно быть 6 штук:
 * Для подключения через SSH (мы уже добавили его).
 * Для веб-панели 3x-ui.
 * Для протокола VLESS.
-* Для протокола Trojan.
 * Для протокола AmneziaWG.
 * Для протокола OpenVPN-over-Cloak.
 * Для MTProto.
 
-Выполните `ufw allow [ваше число]` соответственно 6 раз.
+Выполните `ufw allow [ваше число]` соответственно 5 раз.
 Например:
 ```
 ufw allow 41567
@@ -997,6 +987,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 109.73.4.224/27 -j DROP
 -A ufw-before-input -s 145.255.238.240/28 -j DROP
 -A ufw-before-input -s 149.62.55.240/30 -j DROP
+-A ufw-before-input -s 176.100.254.0/24 -j DROP
 -A ufw-before-input -s 176.109.0.0/21 -j DROP
 -A ufw-before-input -s 176.116.96.0/20 -j DROP
 -A ufw-before-input -s 178.16.156.148/30 -j DROP
@@ -1043,7 +1034,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 178.248.238.205/32 -j DROP
 -A ufw-before-input -s 178.248.238.255/32 -j DROP
 -A ufw-before-input -s 178.248.238.55/32 -j DROP
--A ufw-before-input -s 178.248.239.110/32 -j DROP
 -A ufw-before-input -s 178.248.239.215/32 -j DROP
 -A ufw-before-input -s 178.49.148.176/29 -j DROP
 -A ufw-before-input -s 185.149.160.0/24 -j DROP
@@ -1176,6 +1166,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 212.48.138.240/28 -j DROP
 -A ufw-before-input -s 212.48.141.160/27 -j DROP
 -A ufw-before-input -s 212.48.34.176/29 -j DROP
+-A ufw-before-input -s 212.48.34.184/29 -j DROP
 -A ufw-before-input -s 212.48.53.100/30 -j DROP
 -A ufw-before-input -s 212.48.53.144/30 -j DROP
 -A ufw-before-input -s 212.48.53.152/30 -j DROP
@@ -1340,8 +1331,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.195.92.16/28 -j DROP
 -A ufw-before-input -s 217.195.93.144/29 -j DROP
 -A ufw-before-input -s 217.195.94.200/29 -j DROP
--A ufw-before-input -s 217.198.6.128/26 -j DROP
--A ufw-before-input -s 217.198.6.48/29 -j DROP
 -A ufw-before-input -s 217.20.86.128/26 -j DROP
 -A ufw-before-input -s 217.20.86.232/29 -j DROP
 -A ufw-before-input -s 217.23.88.168/29 -j DROP
@@ -1351,7 +1340,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 217.65.219.160/29 -j DROP
 -A ufw-before-input -s 217.67.177.208/29 -j DROP
 -A ufw-before-input -s 31.177.95.0/24 -j DROP
--A ufw-before-input -s 31.217.218.96/29 -j DROP
 -A ufw-before-input -s 31.44.63.64/29 -j DROP
 -A ufw-before-input -s 37.28.161.48/30 -j DROP
 -A ufw-before-input -s 37.29.53.16/30 -j DROP
@@ -1423,6 +1411,7 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 62.63.101.80/29 -j DROP
 -A ufw-before-input -s 62.63.96.32/28 -j DROP
 -A ufw-before-input -s 62.63.98.24/29 -j DROP
+-A ufw-before-input -s 62.76.98.0/24 -j DROP
 -A ufw-before-input -s 77.243.9.80/28 -j DROP
 -A ufw-before-input -s 77.34.209.160/28 -j DROP
 -A ufw-before-input -s 77.35.76.80/28 -j DROP
@@ -1561,13 +1550,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 83.229.181.192/26 -j DROP
 -A ufw-before-input -s 83.229.211.192/29 -j DROP
 -A ufw-before-input -s 83.229.232.16/29 -j DROP
--A ufw-before-input -s 83.237.68.168/29 -j DROP
--A ufw-before-input -s 83.237.77.44/30 -j DROP
--A ufw-before-input -s 83.237.79.64/29 -j DROP
--A ufw-before-input -s 83.237.87.8/29 -j DROP
--A ufw-before-input -s 83.237.91.216/29 -j DROP
--A ufw-before-input -s 83.237.93.101/32 -j DROP
--A ufw-before-input -s 83.237.93.188/30 -j DROP
 -A ufw-before-input -s 83.242.145.224/27 -j DROP
 -A ufw-before-input -s 83.69.207.248/29 -j DROP
 -A ufw-before-input -s 84.204.143.44/30 -j DROP
@@ -1667,7 +1649,6 @@ cat >> /etc/ufw/before.rules <<EOF
 -A ufw-before-input -s 89.109.7.176/29 -j DROP
 -A ufw-before-input -s 89.111.176.0/22 -j DROP
 -A ufw-before-input -s 89.175.10.160/30 -j DROP
--A ufw-before-input -s 89.175.161.224/30 -j DROP
 -A ufw-before-input -s 89.175.165.208/28 -j DROP
 -A ufw-before-input -s 89.175.170.144/28 -j DROP
 -A ufw-before-input -s 89.175.174.136/29 -j DROP
@@ -1815,7 +1796,7 @@ systemctl restart ssh && systemctl restart networking && ufw enable
 Порты для файервола перечисляются через запятую без пробелов после опции `-u`, например: `-u 41567,13854,29875`, для порта SSH просто указать число после опции `-p` (например `-p 7541`).  
 
 Исходя из этого,  
-2. **Команда запуска скрипта** будет следующая: `bash ./prepare.sh -u 41567,13854,29875,7839,9475,11789 -p 7541`. Все значения замените на собственные (хотя, конечно, ничего не мешает использовать и шаблонные).
+2. **Команда запуска скрипта** будет следующая: `bash ./prepare.sh -u 41567,13854,29875,7839,9475 -p 7541`. Все значения замените на собственные (хотя, конечно, ничего не мешает использовать и шаблонные).
 
 </details>
 
@@ -1875,7 +1856,7 @@ ___
 Возвращаемся к веб-панели:
 * Telegram Token: вставляем токен доступа к созданному боту из [@BotFather.](https://t.me/BotFather)
 * Admin Chat ID: указываем ID вашего аккаунта.
-* Notification Time: рекомендуется сменить на `@weekly` (еженедельно) или `@monthly` (ежемесячно). По умолчанию бот ежедневно присылает статистику использования вашего VPN-сервиса.
+* Notification Time: по умолчанию, бот ежедневно присылает статистику использования вашего VPN-сервиса. Время задается в формате планировщика cron<sup>[`ℹ️`](https://ru.wikipedia.org/wiki/Cron)</sup> [(crontab).](https://crontab.guru/) Рекомендуется сменить стандартную установку на `@weekly` (еженедельно) или `@monthly` (ежемесячно). 
 * Включаем Login Notification.  
 *Сохраняем изменения кнопкой Save и перезагружаем панель кнопкой Restart Panel.*
 
@@ -1885,8 +1866,10 @@ ___
 * Freedom Protocol Strategy: AsIs.
 * Overall Routing Strategy: AsIs.
 
+Раскройте подраздел <ins>*Basic Routing*</ins>, кликните в поле Block IPs и выберите блокировку `Private IP` из выпадающего списка. Таким образом, мы предотвращаем возможность обнаружения всех локальных адресов внутри сети сервера. Это пригодится, если вы решите поделиться доступом к вашему VPN с кем-то другим. В свежеустановленных версиях 3x-ui эта блокировка задана по умолчанию.
+
 <ins>*Log:*</ins>
-Если вам не нужно логгирование, отключаем его, поскольку оно создает дополнительную нагрузку на сервер. Проставяем none во всех пунктах.
+Если вам не нужно логирование, отключаем его, поскольку оно создает дополнительную нагрузку на сервер. Проставяем none/Empty во всех пунктах.
 
 <ins>*Protection Shield:*</ins> отключаем все пункты.  
 *Сохраняем изменения кнопкой Save и перезагружаем Xray кнопкой Restart Xray.*
@@ -1909,13 +1892,7 @@ ___
 
 Нажимаем кнопку **Create.** Готово! Мы запустили протокол VLESS/TCP.  
 В списке Inbounds, кликаем по иконке плюсика в области только что созданного протокола. Мы развернули меню пользователей. Чтобы скопировать ссылку на профиль, нажмите на иконку QR-кода, а затем кликните по нему. Сохраненную в буфер обмена ссылку можно импортировать в любой поддерживаемый менеджер подписок, будь то NekoRay (NekoBox)/v2rayN(G)/Hiddify или другие.  
-Чтобы создать новый профиль (например, для отдельного устройства или пользователя), в меню Inbound'a нажмите Add client и задайте ему имя в разделе Email.  
- 
-Добавим Inbound для протокола Trojan: он создается почти аналогично указанному выше примеру. Различия лишь в этих пунктах:
-
-* Protocol: указываем trojan.
-* Port: указываем порт, ранее созданный для этого протокола.
-* В разделе Client, для клиента нужно дополнительно указать пароль. В дальнейшем он нигде не вводится отдельно и копируется вместе с ссылкой конфигурации.
+Чтобы создать новый профиль (например, для отдельного устройства или пользователя), в меню Inbound'a нажмите Add client и задайте ему имя в разделе Email.
 
 Проверяем, что VPN функционирует корректно.
 
@@ -1928,9 +1905,17 @@ ___
 2. Переходим в раздел Xray Configs → Outbounds → WARP → разворачиваем More information → нажимаем Enable.
 3. Нажимаем Save и перезагружаем Xray кнопкой Restart Xray.
 4. Переходим в раздел Routing Rules → Add Rule → в пункте Inbound Tags выбираем `inbound-[ip-адрес]:[порт]` с портом, соответствующим вашему новому профилю. В пункте Outbound Tags выбираем `warp`. Сохраняем кнопкой Save и перезагружаем Xray кнопкой Restart Xray.
-5. Добавляем конфигурацию WARP-over-VLESS в ваш менеджер подписок. Готово! 
+5. Добавляем конфигурацию WARP-over-VLESS в ваш менеджер подписок. Готово! `
 
 Это может пригодиться, если вам не очень повезло с IP-адресом сервера, региональная принадлежность которого некорректно определяется различными сайтами, практикующими геоблок для пользователей из России. Либо когда IP-адрес попросту "грязный" (то есть ранее кем-то использовался в недобросовестных целях, вследствие чего сайты постоянно требуют капчу или ограничивают доступ). WARP использует IP-адреса серверов Cloudflare, ближайших по местоположению к вашему серверу. Это полностью бесплатно, а трафик безлимитный.
+
+Если у вас наблюдаются проблемы с подключением через WARP (например, не все сайты загружаются или загружаются очень медленно, невозможно использовать IPv6 или другие сбои), попробуйте изменить настройки соответствующего профиля на конфигурацию, указанную ниже.  
+Переходим в раздел **Xray Configs** → находим WARP, открываем меню → Edit:
+
+* Domain Strategy: ForceIP.
+* MTU: 1280.
+* Workers: 2.
+* Включить No Kernel Tun.
 
 </details>
 
@@ -1942,12 +1927,12 @@ ___
 3. Выбираем AmneziaWG, указываем порт, который создавали для этого протокола. Ждём окончания установки. 
 4. После установки первого протокола мы попадаем на основную страницу клиента AmneziaVPN. Кликаем по иконке настроек → Серверы → выбираем наш сервер (Server 1). Здесь его можно переименовать. В разделе Протоколы находим OpenVPN over Cloak и рядом нажимаем на кнопку загрузки. Указываем порт, который ранее добавляли для этого протокола. Ждём окончания установки.  
 
-Дополнительно можно сменить сайт, под который будет маскироваться трафик при использовании этого протокола. Переходим в раздел OpenVPN over Cloak → Cloak → вводим в поле "Замаскировать трафик под" желаемый домен (зарубежный, и, естественно, доступный из РФ).  
+Дополнительно можно сменить сайт, под который будет маскироваться трафик при использовании этого протокола. Переходим в раздел OpenVPN over Cloak → Cloak → вводим в поле "Замаскировать трафик под" желаемый домен (зарубежный и доступный из РФ).  
 
 5. Чтобы добавить ваш сервер с AmneziaVPN на телефон, снизу выбираем кнопку **Поделиться** и добавляем юзеров для каждого протокола отдельно. Протокол AmneziaWG можно добавить QR-кодом, если повезёт, то OpenVPN over Cloak тоже. Если нет – жмём в окне с постоянно меняющимся QR-кодом "Поделиться" и сохраняем конфиг файлом, далее добавляем его на телефон.  
 Управлять пользователями можно в разделе Поделиться → Пользователи.  
 Поделиться "полным доступом к серверу" (т.е. управление протоколами, пользователями и др. на ином устройстве) можно через дополнительное меню (троеточие) в том же разделе Поделиться.
 
 # MTProto
-Мы рекомендуем использовать [mtg](https://github.com/9seconds/mtg) для поднятия MTProto.  
-Существует [обновляемый форк](https://github.com/GetPageSpeed/MTProxy) официального MTProto от команды Telegram, настройка которого [подробно раписывается по ссылке.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
+Мы рекомендуем использовать [mtg](https://github.com/9seconds/mtg) для запуска собственного MTProto.  
+Также существует [обновляемый форк](https://github.com/GetPageSpeed/MTProxy) на основе официального MTProto от команды Telegram, настройка которого [подробно расписана по ссылке.](https://gist.github.com/rameerez/8debfc790e965009ca2949c3b4580b91)
