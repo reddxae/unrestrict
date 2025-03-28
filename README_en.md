@@ -952,16 +952,16 @@ while getopts ":u:p:" opt; do
       ;;
   esac
 done
-echo "Setiing up firewall"
+echo "Setting up firewall"
 ufw default deny incoming && ufw default allow outgoing
 ufw allow $port_num
-echo "Add ports to the allowed list in the firewall:"
+echo "Adding ports to the allowed list in the firewall:"
 for ports in "${ports[@]}"; do
   ufw allow $ports
 done
-echo "Set port for SSH"
+echo "Setting up port for SSH"
 sed -i "s/^#Port 22/Port $port_num/" /etc/ssh/sshd_config
-echo "Restrict GRFC"
+echo "Restricting GRFC"
 cat >> /etc/ufw/before.rules <<EOF
 # Restrict GRFC
 -A ufw-before-input -s 109.124.119.88/29 -j DROP

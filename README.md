@@ -65,7 +65,7 @@ ___
 Выполните команду:
 ```sh
 cat >> /etc/ufw/before.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw-before-input -s 109.124.119.88/29 -j DROP
 -A ufw-before-input -s 109.124.66.128/30 -j DROP
 -A ufw-before-input -s 109.124.66.160/28 -j DROP
@@ -890,7 +890,7 @@ EOF
 Выполните команду:
 ```sh
 cat >> /etc/ufw/before6.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw6-before-input -s 2a0c:a9c7:156::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:157::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:158::/48 -j DROP
@@ -952,18 +952,18 @@ while getopts ":u:p:" opt; do
       ;;
   esac
 done
-echo "Настройка файервола"
+echo "Настраиваю файервол"
 ufw default deny incoming && ufw default allow outgoing
 ufw allow $port_num
-echo "Добавляем порты в разрешённые в файерволе:"
+echo "Добавляю разрешённые порты в файерволе:"
 for ports in "${ports[@]}"; do
   ufw allow $ports
 done
-echo "Устанавливаем порт для SSH"
+echo "Устанавливаю порт для SSH"
 sed -i "s/^#Port 22/Port $port_num/" /etc/ssh/sshd_config
-echo "Блокировка сканирования ГРЧЦ"
+echo "Блокирую сканирование ГРЧЦ"
 cat >> /etc/ufw/before.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw-before-input -s 109.124.119.88/29 -j DROP
 -A ufw-before-input -s 109.124.66.128/30 -j DROP
 -A ufw-before-input -s 109.124.66.160/28 -j DROP
@@ -1782,13 +1782,13 @@ cat >> /etc/ufw/before.rules <<EOF
 COMMIT
 EOF
 cat >> /etc/ufw/before6.rules <<EOF
-# Restrict GRCHC
+# Restrict GRFC
 -A ufw6-before-input -s 2a0c:a9c7:156::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:157::/48 -j DROP
 -A ufw6-before-input -s 2a0c:a9c7:158::/48 -j DROP
 COMMIT
 EOF
-echo "Перезапускаем сервисы"
+echo "Перезапускаю сервисы"
 systemctl restart ssh && systemctl restart networking && ufw enable
 ```
 
