@@ -1,4 +1,4 @@
-<div align="center"> 
+<div align="center">
 
 <img src="https://github.com/user-attachments/assets/a00b09e5-88bc-4514-a14f-f77f91715605" width="50" height="62">
 
@@ -15,7 +15,7 @@ Additionally, you can use [WinSCP](https://winscp.net/eng/docs) and [PuTTY](http
 
 **It is strongly recommended** to fully read the guide before proceeding with described steps.
 
-# Initial setup 
+# Initial setup
 ## Authorization
 
 Connect to the server via SSH. You can use the ssh command in Terminal or WinSCP.
@@ -38,27 +38,27 @@ Please note that **the script performs all recommended settings,** including reg
 <summary>Manual method</summary>
 
 ## Configuration
-1. Run the command `apt update && apt upgrade`.
-2. Run the command `ufw status` – the output should be inactive.
+1. Run the command `apt update && apt upgrade && apt install ufw`.
+2. Run the command `ufw status` – the output should be **inactive**.
 3. Run the command `ufw default deny incoming && ufw default allow outgoing`.
 4. Come up with or [generate](https://www.random.org/) a random number from 1 to 65535 – this will be your new SSH connection port.
 5. Run the command `ufw allow [SSH port number]`.
 6. Navigate to the path /etc/ssh/sshd_config, uncomment the line `#Port 22` (i.e., remove the #) and replace the number 22 with your chosen number.
-7. Run the command `systemctl restart ssh && systemctl restart networking && ufw enable`. 
+7. Run the command `systemctl restart ssh && systemctl restart networking && ufw enable`.  
 After this, the session in WinSCP will be disconnected because the connection data has changed. The ssh/PuTTY session will remain active. Your SSH connection port has now changed to the number you specified, so for future connections use the new port (instead of the default 22). When connecting via ssh, use the flag `-p [port]` with the command mentioned above.
 
 ## Blocking GRFC subnets
 ___
-This section is optional but highly recommended if you are in Russia.  
+This section is optional but recommended if you are in Russia.
 
-This way, we configure the blocking of active probing when web crawlers are explicitly targeting your VDS/VPS hoster machine/subnet. If Roskomnadzor deploy active scanning of hosts potentially used as VPNs (secretly collecting statistics of active hosts in the subnet with suspiciously many questionable ports) — we protect ourselves from being flagged.
+We configure the blocking of active probing when web crawlers are explicitly targeting your VDS/VPS hoster machine/subnet. If Roskomnadzor deploy active scanning of hosts potentially used as VPNs (secretly collecting statistics of active hosts in the subnet with suspiciously many questionable ports) — we protect ourselves from being flagged.
 ___
 
 <details>
+
 <summary>Restricting GRFC</summary>
 
-This is an [up-to-date list](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) of all subnets from the [The General Radio Frequency Center (GRFC)](https://istories.media/en/cases/2023/02/08/the-case-of-russian-censorship/?tztc=1) that we will block.
-If you need to find something specific in this list, or if you are interested in detailed info about subnets, refer to the file [blacklist_with_comments.txt](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt).
+This is an [up-to-date list](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist.txt) of all subnets from the [The General Radio Frequency Center (GRFC)](https://istories.media/en/cases/2023/02/08/the-case-of-russian-censorship/?tztc=1) that we will block. If you need to find something specific in this list, or if you are interested in detailed info about subnets, refer to the file [blacklist_with_comments.txt](https://github.com/C24Be/AS_Network_List/blob/main/blacklists/blacklist_with_comments.txt).
 
 ### before.rules (IPv4)
 
@@ -915,7 +915,7 @@ In total, considering the previously added ports, there should be 6 in total:
 * For the OpenVPN-over-Cloak protocol.
 * For MTProto.
 
-Run `ufw allow [your number]` command accordingly 5 times.
+Run `ufw allow [your number]` command accordingly 5 times.  
 For example:
 ```
 ufw allow 41567
@@ -1793,7 +1793,7 @@ systemctl restart ssh && systemctl restart networking && ufw enable
 ```
 
 Next, proceed to run the script.  
-Ports for the firewall are listed comma-separated without spaces after the `-u` option, for example: `-u 41567,13854,29875`, and for the SSH port, just specify the number after the `-p` option (e.g., `-p 7541`).  
+Ports for the firewall are listed comma-separated without spaces after the `-u` option, for example: `-u 41567,13854,29875`, and for the SSH port, just specify the number after the `-p` option (e.g., `-p 7541`).
 
 On this basis,  
 2. **The command to run the script** will be as follows: `bash ./prepare.sh -u 41567,13854,29875,7839,9475 -p 7541`. Replace all values with your own (although, of course, you can use the template ones if you prefer).
@@ -1808,21 +1808,21 @@ ___
 This will create two files: the public key **(file with a .pub extension)** and the private authorization key **(without extension, only the name you specified).** They will be saved in the user's home directory.
 2. Log in to the server using any available method and access the console, then run the command `mkdir ~/.ssh && touch ~/.ssh/authorized_keys && chmod 644 -R ~/.ssh`.
 3. Edit on the server using WinSCP or [nano:](https://help.ubuntu.com/community/Nano)  
-In the file `/etc/ssh/sshd_config:`   
-Uncomment and change the value of `PasswordAuthentication` to `no`  
-Uncomment the line `PubkeyAuthentication` and change the value to `yes`  
-Add a new line `AuthenticationMethods publickey`  
-Uncomment the line `AuthorizedKeysFile` and remove `.ssh/authorized_keys2` from its value  
-As a result, it should look like this: `AuthorizedKeysFile      .ssh/authorized_keys`. Save the file.
+In the file `/etc/ssh/sshd_config:`  
+Uncomment and change the value of `PasswordAuthentication` to `no`;  
+Uncomment the line `PubkeyAuthentication` and change its value to `yes`;  
+Add a new line `AuthenticationMethods publickey`;  
+Uncomment the line `AuthorizedKeysFile` and remove `.ssh/authorized_keys2` from its value.  
+The final line should look like this: `AuthorizedKeysFile .ssh/authorized_keys`. Save the file.
 
 Return to the previously created public key file, open it with a text editor, and copy the key **WITHOUT specifying the username@hostname.** (at the end of the line).  
 Copied text should look something like this: `ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN3CGQ2UqRlaqdxwIdyAMkvFWDkvnEAqBRIPCqbfXvYG`.  
 Go to the file `/root/.ssh/authorized_keys`, open it with a text editor, and paste the copied key. Save the file.
 
 4. Run the command `systemctl reload ssh` to apply changes.
-5. Connect to the server via Terminal: ssh root@server-IP -i *(path to the private key file)* -p *(SSH port)*. Enter the previously defined passphrase for the key.
+5. Connect to the server via Terminal: `ssh root@server-IP -i (path to the private key file) -p (SSH port)`. Enter the previously defined passphrase for the key.
 
-If you're using WinSCP, let’s set up authentication for it as well:  
+If you're using WinSCP, let’s set up authentication for it as well:
 1. Choose **New Session.**
 2. Enter all the same information as at the beginning of the instructions, except for the root password.
 3. Go to the "Advanced..." → SSH/Authentication → Private key file → [...] (file selection) → change the extension filter to All Files → select the private key file. Agree to convert it to the required PuTTY Private Key (.ppk) format, enter the passphrase (if it was set), and save the file in a secure place. File will be automatically selected in field. Click OK.
@@ -1845,13 +1845,13 @@ The download and installation of dependencies will begin. During the installatio
 
 <ins>*Authentication*</ins> (optional):
 * Change the username and password to custom values. It's recommended to use long values.
-* In the Secret Token subsection, enable Secure Login. The automatically generated secret token can be changed to a custom one.  
+* Enabling 2FA is strongly recommended (especially if your connection to the panel is not secure). Scan the QR code or manually enter the secret key using your one-time code generator.  
 *Save changes with the Save button.*
 
 <ins>*Telegram Bot*</ins> (optional):  
 Create a bot:
-* Open your Telegram client and contact [@BotFather.](https://t.me/BotFather) Create a new bot with a random name and username. In the congratulatory message about the successful creation of the bot, find and copy the bot access token.  
-* If you have a third-party client/ID showing enabled in experimental settings: go to Settings/your profile and copy your account ID; if you have the official client, send any message in a chat and reply to it with the /id command.  
+* Open your Telegram client and contact [@BotFather.](https://t.me/BotFather) Create a new bot with a random name and username. In the congratulatory message about the successful creation of the bot, find and copy the bot access token.
+* If you have a third-party client/ID showing enabled in experimental settings: go to Settings/your profile and copy your account ID; if you have the official client, send any message in a chat and reply to it with the /id command.
 
 Return to the web panel:
 * Telegram Token: paste the bot access token obtained from [@BotFather.](https://t.me/BotFather)
@@ -1868,8 +1868,7 @@ Return to the web panel:
 
 Now expand <ins>*Basic Routing*</ins> subsection, click in a Block IPs field, and select `Private IP` from the dropdown menu. This way, we prevent pinging for all local addresses within the server's network. This comes in handy if you decide to share access to your VPN with someone else. In freshly installed versions of 3x-ui this blocking is set by default, in this case you don't need to change anything manually.
 
-<ins>*Log:*</ins>
-If logging is not needed, disable it as it adds extra load to the server. Set none for all items.
+<ins>*Log:*</ins> if logging is not needed, disable it as it adds extra load to the server. Set none/Empty for all items.
 
 <ins>*Protection Shield:*</ins> disable all items.  
 *Save changes by clicking Save and Restart Xray buttons.*
@@ -1892,7 +1891,7 @@ Click **+ Add Inbound.** Let's configure the VLESS/TCP protocol. Only modify the
 
 Click the **Create** button. Done! We have launched the VLESS/TCP protocol.  
 In the Inbounds list, click the plus icon in the just-created protocol area. You have expanded the user menu. To copy the profile link, click the QR code icon, then click on it again. The link saved to the clipboard can be imported into any supported subscription manager, whether NekoRay (NekoBox)/v2rayN(G)/Hiddify/etc.  
-To create a new profile (e.g., for a separate device or user), in the Inbound menu, click Add client and assign it a name in the Email section.  
+To create a new profile (e.g., for a separate device or user), in the Inbound menu, click Add client and assign it a name in the Email section.
 
 Add an Inbound for the Trojan protocol: it is created almost identically to the example above. The differences are only in these points:
 
@@ -1913,7 +1912,7 @@ Avoid using the clone option, as this would prevent you from editing all setting
 4. Go to the Routing Rules section → Add Rule → in the Inbound Tags field, select `inbound-[ip-address]:[port]` with the port corresponding to your new profile. In the Outbound Tags field, select `warp`. Click Save and Restart Xray.
 5. Add the WARP-over-VLESS configuration to your subscription manager. Done!
 
-This may be useful if you're unlucky with the server IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblock for users from your country. Or if the IP address is simply "dirty" (meaning it was previously used for some unfair purposes, causing sites to constantly require CAPTCHAs or fully restrict access). WARP uses the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
+This may be useful if you're unlucky with the server IP address, whose regional affiliation is incorrectly identified by various sites practicing geoblock for users from your country. Or if the IP address is "dirty" (meaning it was previously used for some unfair purposes, causing sites to constantly require CAPTCHAs or fully restrict access). This often leads to websites blocking all provider subnets by ASN<sup>[`ℹ️`](https://en.wikipedia.org/wiki/Autonomous_system_(Internet))</sup>, regardless of specific IP addresses. WARP provides the IP addresses of Cloudflare servers that are geographically closest to your server. It's completely free and offers unlimited traffic.
 
 If you are experiencing problems connecting via WARP (e.g. not all pages even load or load very slowly, can't use IPv6, or other troubles), try set desired profile to the configuration provided below.  
 Go to **Xray Configs** → find WARP, open menu → Edit:
@@ -1928,16 +1927,15 @@ Go to **Xray Configs** → find WARP, open menu → Edit:
 # [Amnezia](https://github.com/amnezia-vpn)
 1. Download the [AmneziaVPN](https://amnezia.org/en/downloads) client on your PC (the site is inaccessible in Russia).  
 Launch it and select **Set up your own server** → **I have connection data** → enter the `Server IP address:port for SSH authorization` *(e.g., 134.43.57.54:43842)*, login as root, and enter the server password. If you're using SSH key authentication, paste the contents of the private key file into the password input field (including the lines `-----BEGIN OPENSSH PRIVATE KEY-----` and `-----END OPENSSH PRIVATE KEY-----`).  
-A progress bar will appear on the screen, wait a while. 
+A progress bar will appear on the screen, wait a while.
 2. A window for selecting pre-installed profiles will open. Scroll down and select **Choose protocol manually.**
 3. Select AmneziaWG, and specify the port you previously added for this protocol. Wait for the installation to finish.
-4. After installing the first protocol, you will land on the main page of the AmneziaVPN client. Click the settings icon → Servers → select your server (Server 1). Here you can rename it. In the Protocols section, find OpenVPN over Cloak and click the download button next to it. Specify the port that you previously added for this protocol. Wait for the installation to complete.  
+4. After installing the first protocol, you will land on the main page of the AmneziaVPN client. Click the settings icon → Servers → select your server (Server 1). Here you can rename it. In the Protocols section, find OpenVPN over Cloak and click the download button next to it. Specify the port that you previously added for this protocol. Wait for the installation to complete.
 
-You can also change the site that the traffic will mask as. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (located outside Russia but accessible in Russia).  
+You can also change the site that the traffic will mask as. Go to the OpenVPN over Cloak section → Cloak → enter the desired domain in the "Mask traffic as" field (located outside Russia but accessible in Russia).
 
-5. To share access to your VPN based on Amnezia to another device, click the **Share** button at the bottom and add users for each protocol separately. The AmneziaWG protocol can be imported via QR code. If you're lucky, OpenVPN over Cloak can be imported too. Otherwise, on the page with a constantly changing QR code (which cause scan to fail and there's no hurry to fix this bug) click "Share" and save the config file, then import it on another device.
-You can manage users in the Share → Users section.  
-You can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
+5. To share access to your VPN based on Amnezia to another device, click the **Share** button at the bottom and add users for each protocol separately. The AmneziaWG protocol can be imported via QR code. If you're lucky, OpenVPN over Cloak can be imported too. Otherwise, on the page with a constantly changing QR code (which cause scan to fail and there's no hurry to fix this bug) click "Share" and save the config file, then import it on another device. You can manage users in the Share → Users section.  
+You also can share "full access to the server" (i.e., manage protocols, users, etc., on another device) through the additional menu (three dots) in the same Share section.
 
 # MTProto
 I recommend using [mtg](https://github.com/9seconds/mtg) to set up personal MTProto.  
